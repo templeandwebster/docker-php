@@ -65,7 +65,8 @@ RUN apt-mark manual '.*' > /dev/null; \
   apt-mark auto '.*' > /dev/null; \
   [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark;
 
-RUN export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
+RUN savedAptMark="$(apt-mark showmanual)"; \
+  export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
     ; \
   docker-php-ext-configure gd --with-jpeg --with-xpm --with-webp --with-freetype \
     ; \
@@ -142,6 +143,8 @@ RUN export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" 
     ev \
     ; \
   cp /usr/bin/envsubst /usr/local/bin/envsubst; \
+  apt-mark auto '.*' > /dev/null; \
+  [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
   apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImport=false; \
   rm -rf /tmp/* ~/.pearrc /var/lib/apt/lists/* /var/cache/*; \
   php --version \
