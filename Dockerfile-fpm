@@ -29,6 +29,7 @@ RUN set -eux; \
     netcat \
     tzdata \
     unzip \
+    zlib1g \
   ; \
   apt-mark manual '.*' > /dev/null; \
   savedAptMark="$(apt-mark showmanual)"; \
@@ -64,7 +65,8 @@ RUN set -eux; \
   ; $(dpkg --compare-versions ${PHP_VERSION} ge 8.1) \
   ; if [ "$?" -eq "0" ]; then WITH_AVIF=--with-avif; else WITH_AVIF=; fi \
   ; $(dpkg --compare-versions ${PHP_VERSION} ge 7.4) \
-  ; if [ "$?" -eq "0" ]; then WITH_PARAMS="--with-jpeg --with-xpm --with-webp --with-freetype ${WITH_AVIF}"; else WITH_PARAMS=; fi \
+  ; if [ "$?" -eq "0" ]; then WITH_PARAMS="--with-jpeg --with-xpm --with-webp --with-freetype ${WITH_AVIF}"; \
+    else WITH_PARAMS="--with-jpeg-dir=/usr/include --with-png-dir=/usr/include --with-webp-dir=/usr/include --with-freetype-dir=/usr/include --with-xpm-dir=/usr/include"; fi \
   ; set -e \
   ; \
   docker-php-ext-configure gd ${WITH_PARAMS} \
