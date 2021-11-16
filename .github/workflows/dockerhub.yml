@@ -21,7 +21,7 @@ jobs:
     permissions:
       packages: write
     env:
-      version: 8.1.0RC6
+      version: 8.1-rc
       alternate_version: 8.1
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

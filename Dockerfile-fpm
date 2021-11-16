@@ -59,12 +59,12 @@ RUN set -eux; \
     libbz2-dev \
     zlib1g-dev \
     ${PHP_EXTRA_BUILD_DEPS:-} \
-    ; \
-  export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
-    ; \
-  $(dpkg --compare-versions ${PHP_VERSION} ge 8.1) \
+  ; export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
+  ; set +e \
+  ; $(dpkg --compare-versions ${PHP_VERSION} ge 8.1) \
   ; if [ "$?" -eq "0" ]; then WITH_AVIF=--with-avif; else WITH_AVIF=; fi \
-    ; \
+  ; set -e \
+  ; \
   docker-php-ext-configure gd --with-jpeg --with-xpm --with-webp --with-freetype ${WITH_AVIF} \
     ; \
   docker-php-ext-install -j$(nproc) \
