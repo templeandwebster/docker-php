@@ -63,9 +63,11 @@ RUN set -eux; \
   ; set +e \
   ; $(dpkg --compare-versions ${PHP_VERSION} ge 8.1) \
   ; if [ "$?" -eq "0" ]; then WITH_AVIF=--with-avif; else WITH_AVIF=; fi \
+  ; $(dpkg --compare-versions ${PHP_VERSION} ge 7.4) \
+  ; if [ "$?" -eq "0" ]; then WITH_PARAMS="--with-jpeg --with-xpm --with-webp --with-freetype ${WITH_AVIF}"; else WITH_PARAMS=; fi \
   ; set -e \
   ; \
-  docker-php-ext-configure gd --with-jpeg --with-xpm --with-webp --with-freetype ${WITH_AVIF} \
+  docker-php-ext-configure gd ${WITH_PARAMS} \
     ; \
   docker-php-ext-install -j$(nproc) \
     gd \
