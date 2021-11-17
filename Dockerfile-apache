@@ -143,6 +143,8 @@ RUN set -eux; \
   docker-php-ext-enable \
     apcu \
     ev \
+    igbinary \
+    msgpack \
     ; \
   cp /usr/bin/envsubst /usr/local/bin/envsubst; \
   apt-mark auto '.*' > /dev/null; \
