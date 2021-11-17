@@ -94,6 +94,86 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
 #            ${{ github.repository_owner }}/php:${{ env.version }}-cli
 #            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
+  php-81-alpine:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    timeout-minutes: 720
+    permissions:
+      packages: write
+    env:
+      version: 8.1-rc
+      alternate_version: 8.1
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Login to Dockerhub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: PHP ${{ env.version }} FPM
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-fpm-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-apline
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
+      - name: PHP ${{ env.version }} Apache
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-apache-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-apache-alpine
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache-alpine
+      - name: PHP ${{ env.version }} CLI
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-cli-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
   php-80:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -174,6 +254,86 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
 #            ${{ github.repository_owner }}/php:${{ env.version }}-cli
 #            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
+  php-80-alpine:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    timeout-minutes: 720
+    permissions:
+      packages: write
+    env:
+      version: 8.0
+      alternate_version: 8
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Login to Dockerhub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: PHP ${{ env.version }} FPM
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-fpm-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
+      - name: PHP ${{ env.version }} Apache
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-apache-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-apache-alpine
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache-alpine
+      - name: PHP ${{ env.version }} CLI
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-cli-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
   php-74:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -254,6 +414,86 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
 #            ${{ github.repository_owner }}/php:${{ env.version }}-cli
 #            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
+  php-74-alpine:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    timeout-minutes: 720
+    permissions:
+      packages: write
+    env:
+      version: 7.4
+      alternate_version: 7
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Login to Dockerhub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: PHP ${{ env.version }} FPM
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-fpm-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
+      - name: PHP ${{ env.version }} Apache
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-apache-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-apache-alpine
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache-alpine
+      - name: PHP ${{ env.version }} CLI
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-cli-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
   php-73:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -327,3 +567,76 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli
 #            ${{ github.repository_owner }}/php:${{ env.version }}-cli
+  php-73-alpine:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    timeout-minutes: 720
+    permissions:
+      packages: write
+    env:
+      version: 7.3
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Login to Dockerhub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: PHP ${{ env.version }} FPM
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-fpm-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
+      - name: PHP ${{ env.version }} Apache
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-apache-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-apache-alpine
+      - name: PHP ${{ env.version }} CLI
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-cli-alpine
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
