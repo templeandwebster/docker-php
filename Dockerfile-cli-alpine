@@ -7,6 +7,7 @@ LABEL org.opencontainers.image.description="PHP base image with commonly used ex
 RUN set -eux; \
   apk update \
   && apk add --no-cache \
+    bash \
     freetype \
     git \
     imagemagick \
