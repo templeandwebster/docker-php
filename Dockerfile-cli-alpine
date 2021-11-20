@@ -143,7 +143,7 @@ RUN set -eux; \
   pecl install --onlyreqdeps --nobuild event; \
     cd "$(pecl config-get temp_dir)/event"; \
     phpize; \
-    ./configure; \
+    ./configure --with-event-core --with-event-openssl --with-event-extra; \
     make && make install; \
     cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
