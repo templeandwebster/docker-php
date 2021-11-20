@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="PHP base image with commonly used ex
 RUN set -eux; \
   apt-get update \
   && LIBAVIF=`apt-cache pkgnames libavif | head -1` \
+  && LIBEVENTEXTRA=`apt-cache pkgnames libevent-extra | head -1` \
+  && LIBEVENTOPENSSL=`apt-cache pkgnames libevent-openssl | head -1` \
+  && LIBEVENTPTHREADS=`apt-cache pkgnames libevent-pthreads | head -1` \
   && LIBMPDEC=`apt-cache pkgnames libmpdec | head -1` \
   && apt-get install --no-install-recommends -y \
     git \
@@ -14,6 +17,9 @@ RUN set -eux; \
     ${LIBAVIF} \
     libcmph0 \
     libedit2 \
+    ${LIBEVENTEXTRA} \
+    ${LIBEVENTOPENSSL} \
+    ${LIBEVENTPTHREADS} \
     libhashkit2 \
     libjpeg62-turbo \
     libmemcached11 \
@@ -39,6 +45,7 @@ RUN set -eux; \
     libcmph-dev \
     libcurl4-openssl-dev \
     libedit-dev \
+    libevent-dev \
     libicu-dev \
     libjpeg-dev \
     libjpeg62-turbo-dev \
@@ -70,12 +77,15 @@ RUN set -eux; \
   docker-php-ext-configure gd ${WITH_PARAMS} \
     ; \
   docker-php-ext-install -j$(nproc) \
+    --ini-name 0-docker-php-ext-sockets.ini \
+    sockets \
+    ; \
+  docker-php-ext-install -j$(nproc) \
     gd \
     gettext \
     intl \
     opcache \
     pcntl \
-    sockets \
     zip \
     ; \
   pecl update-channels \
@@ -140,9 +150,17 @@ RUN set -eux; \
     ./configure; \
     make && make install; \
     cd -; \
+  pecl install --onlyreqdeps --nobuild event; \
+    cd "$(pecl config-get temp_dir)/event"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
+  docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
+  docker-php-ext-enable --ini-name 0-docker-php-ext-msgpack.ini msgpack; \
   docker-php-ext-enable \
     apcu \
-    ev \
+    event \
     igbinary \
     msgpack \
     ; \
