@@ -22,6 +22,7 @@ RUN set -eux; \
     libsodium \
     libxpm \
     libzip \
+    lz4-libs \
     mpdecimal \
     msgpack-c \
     netcat-openbsd \
@@ -50,6 +51,7 @@ RUN set -eux; \
     libxml2-dev \
     libxpm-dev \
     libzip-dev \
+    lz4-dev \
     mpdecimal-dev \
     msgpack-c-dev \
     openssl-dev \
@@ -113,25 +115,13 @@ RUN set -eux; \
   pecl install --onlyreqdeps --nobuild redis; \
     cd "$(pecl config-get temp_dir)/redis"; \
     phpize; \
-    ./configure --enable-redis-igbinary --enable-redis-json --enable-redis-msgpack; \
+    ./configure --enable-redis-igbinary --enable-redis-json --enable-redis-msgpack --enable-redis-lz4 --with-liblz4=/usr/include; \
     make && make install; \
     cd -; \
   pecl install --onlyreqdeps --nobuild memcached; \
     cd "$(pecl config-get temp_dir)/memcached"; \
     phpize; \
     ./configure --enable-memcached-igbinary --enable-memcached-json --enable-memcached-session --enable-memcached-sasl --enable-memcached-msgpack; \
-    make && make install; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild xdebug; \
-    cd "$(pecl config-get temp_dir)/xdebug"; \
-    phpize; \
-    ./configure; \
-    make && make install; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild xhprof; \
-    cd "$(pecl config-get temp_dir)/xhprof/extension"; \
-    phpize; \
-    ./configure; \
     make && make install; \
     cd -; \
   pecl install --onlyreqdeps --nobuild ev; \

@@ -10,6 +10,7 @@ RUN set -eux; \
   && LIBEVENTEXTRA=`apt-cache pkgnames libevent-extra | head -1` \
   && LIBEVENTOPENSSL=`apt-cache pkgnames libevent-openssl | head -1` \
   && LIBEVENTPTHREADS=`apt-cache pkgnames libevent-pthreads | head -1` \
+  && LIBLZ4=`apt-cache pkgnames liblz4 | head -1` \
   && LIBMPDEC=`apt-cache pkgnames libmpdec | head -1` \
   && apt-get install --no-install-recommends -y \
     git \
@@ -24,6 +25,7 @@ RUN set -eux; \
     libjpeg62-turbo \
     libmemcached11 \
     libmemcachedutil2 \
+    ${LIBLZ4} \
     ${LIBMPDEC} \
     libmsgpackc2 \
     libpng16-16 \
@@ -49,6 +51,7 @@ RUN set -eux; \
     libicu-dev \
     libjpeg-dev \
     libjpeg62-turbo-dev \
+    liblz4-dev \
     libmagick++-dev \
     libmagickwand-dev \
     libmemcached-dev \
@@ -123,25 +126,13 @@ RUN set -eux; \
   pecl install --onlyreqdeps --nobuild redis; \
     cd "$(pecl config-get temp_dir)/redis"; \
     phpize; \
-    ./configure --enable-redis-igbinary --enable-redis-json --enable-redis-msgpack; \
+    ./configure --enable-redis-igbinary --enable-redis-json --enable-redis-msgpack --enable-redis-lz4 --with-liblz4=/usr/include; \
     make && make install; \
     cd -; \
   pecl install --onlyreqdeps --nobuild memcached; \
     cd "$(pecl config-get temp_dir)/memcached"; \
     phpize; \
     ./configure --enable-memcached-igbinary --enable-memcached-json --enable-memcached-session --enable-memcached-sasl --enable-memcached-msgpack; \
-    make && make install; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild xdebug; \
-    cd "$(pecl config-get temp_dir)/xdebug"; \
-    phpize; \
-    ./configure; \
-    make && make install; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild xhprof; \
-    cd "$(pecl config-get temp_dir)/xhprof/extension"; \
-    phpize; \
-    ./configure; \
     make && make install; \
     cd -; \
   pecl install --onlyreqdeps --nobuild ev; \
