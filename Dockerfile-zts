@@ -147,6 +147,18 @@ RUN set -eux; \
     ./configure --with-event-core --with-event-openssl --with-event-extra; \
     make && make install; \
     cd -; \
+  pecl install --onlyreqdeps --nobuild xdebug; \
+    cd "$(pecl config-get temp_dir)/xdebug"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
+  pecl install --onlyreqdeps --nobuild pcov; \
+    cd "$(pecl config-get temp_dir)/pcov"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-msgpack.ini msgpack; \
   docker-php-ext-enable \
