@@ -22,8 +22,8 @@ jobs:
     permissions:
       packages: write
     env:
-      version: '8.1'
-      alternate_version: '8'
+      version: '8.1-rc'
+      alternate_version: '8.1'
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -102,8 +102,8 @@ jobs:
     permissions:
       packages: write
     env:
-      version: '8.1'
-      alternate_version: '8'
+      version: '8.1-rc'
+      alternate_version: '8.1'
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -166,7 +166,7 @@ jobs:
       packages: write
     env:
       version: '8.0'
-#      alternate_version: 8
+      alternate_version: '8'
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -202,8 +202,8 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm
             ${{ github.repository_owner }}/php:${{ env.version }}-fpm
-#            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
-#            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
       - name: PHP ${{ env.version }} Apache
         uses: docker/build-push-action@v2
         with:
@@ -219,8 +219,8 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache
             ${{ github.repository_owner }}/php:${{ env.version }}-apache
-#            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
-#            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
       - name: PHP ${{ env.version }} CLI
         uses: docker/build-push-action@v2
         with:
@@ -236,8 +236,8 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli
             ${{ github.repository_owner }}/php:${{ env.version }}-cli
-#            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
-#            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
   php-80-alpine:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -246,7 +246,7 @@ jobs:
       packages: write
     env:
       version: '8.0'
-#      alternate_version: 8
+      alternate_version: '8'
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -282,8 +282,8 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
             ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
-#            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
-#            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
       - name: PHP ${{ env.version }} CLI
         uses: docker/build-push-action@v2
         with:
@@ -299,8 +299,8 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
             ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
-#            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
-#            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
   php-74:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
