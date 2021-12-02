@@ -95,6 +95,23 @@ jobs:
             ${{ github.repository_owner }}/php:${{ env.version }}-cli
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
+      - name: PHP ${{ env.version }} ZTS
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-zts
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts
+            ${{ github.repository_owner }}/php:${{ env.version }}-zts
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
   php-81-alpine:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -238,6 +255,23 @@ jobs:
             ${{ github.repository_owner }}/php:${{ env.version }}-cli
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
+      - name: PHP ${{ env.version }} ZTS
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-zts
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts
+            ${{ github.repository_owner }}/php:${{ env.version }}-zts
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
   php-80-alpine:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -381,6 +415,23 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
             ${{ github.repository_owner }}/php:${{ env.version }}-cli
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
+      - name: PHP ${{ env.version }} ZTS
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-zts
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
+            ${{ github.repository_owner }}/php:${{ env.version }}-zts
+            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
   php-74-alpine:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -517,6 +568,21 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli
             ${{ github.repository_owner }}/php:${{ env.version }}-cli
+      - name: PHP ${{ env.version }} ZTS
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile-zts
+          build-args: |
+            PHP_VERSION=${{ env.version }}
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts
+            ${{ github.repository_owner }}/php:${{ env.version }}-zts
   php-73-alpine:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest

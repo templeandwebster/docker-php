@@ -191,4 +191,4 @@ RUN set -eux; \
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/html
-CMD ["php" "-a"]
+CMD ["php", "-a"]
