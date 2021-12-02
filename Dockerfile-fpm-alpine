@@ -68,12 +68,13 @@ RUN set -eux; \
   ; \
   docker-php-ext-configure gd ${WITH_PARAMS} \
     ; \
+  docker-php-ext-install -j$(nproc) gd \
+    ; \
   docker-php-ext-install -j$(nproc) \
     --ini-name 0-docker-php-ext-sockets.ini \
     sockets \
     ; \
   docker-php-ext-install -j$(nproc) \
-    gd \
     gettext \
     intl \
     opcache \
