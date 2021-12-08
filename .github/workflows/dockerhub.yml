@@ -57,10 +57,14 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm
             ${{ github.repository_owner }}/php:${{ env.version }}-fpm
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
+            ghcr.io/${{ github.repository_owner }}/php:fpm
+            ${{ github.repository_owner }}/php:fpm
       - name: PHP ${{ env.version }} Apache
         uses: docker/build-push-action@v2
         with:
@@ -74,10 +78,14 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache
             ${{ github.repository_owner }}/php:${{ env.version }}-apache
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
+            ghcr.io/${{ github.repository_owner }}/php:apache
+            ${{ github.repository_owner }}/php:apache
       - name: PHP ${{ env.version }} CLI
         uses: docker/build-push-action@v2
         with:
@@ -91,10 +99,16 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli
             ${{ github.repository_owner }}/php:${{ env.version }}-cli
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
+            ghcr.io/${{ github.repository_owner }}/php:cli
+            ${{ github.repository_owner }}/php:cli
+            ghcr.io/${{ github.repository_owner }}/php:latest
+            ${{ github.repository_owner }}/php:latest
       - name: PHP ${{ env.version }} ZTS
         uses: docker/build-push-action@v2
         with:
@@ -108,10 +122,14 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts
             ${{ github.repository_owner }}/php:${{ env.version }}-zts
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
+            ghcr.io/${{ github.repository_owner }}/php:zts
+            ${{ github.repository_owner }}/php:zts
   php-81-alpine:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -154,6 +172,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-apline-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
             ${{ github.repository_owner }}/php:${{ env.version }}-fpm-apline
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
@@ -171,6 +191,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
             ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
@@ -217,6 +239,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm
             ${{ github.repository_owner }}/php:${{ env.version }}-fpm
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
@@ -234,6 +258,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache
             ${{ github.repository_owner }}/php:${{ env.version }}-apache
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
@@ -251,6 +277,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli
             ${{ github.repository_owner }}/php:${{ env.version }}-cli
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
@@ -268,6 +296,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts
             ${{ github.repository_owner }}/php:${{ env.version }}-zts
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
@@ -314,6 +344,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
             ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
@@ -331,6 +363,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
             ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
@@ -377,10 +411,12 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
-            ${{ github.repository_owner }}/php:${{ env.version }}-fpm
       - name: PHP ${{ env.version }} Apache
         uses: docker/build-push-action@v2
         with:
@@ -394,10 +430,12 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache
+            ${{ github.repository_owner }}/php:${{ env.version }}-apache
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
-            ${{ github.repository_owner }}/php:${{ env.version }}-apache
       - name: PHP ${{ env.version }} CLI
         uses: docker/build-push-action@v2
         with:
@@ -411,9 +449,11 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli
-            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
             ${{ github.repository_owner }}/php:${{ env.version }}-cli
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
       - name: PHP ${{ env.version }} ZTS
         uses: docker/build-push-action@v2
@@ -428,9 +468,11 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts
-            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
             ${{ github.repository_owner }}/php:${{ env.version }}-zts
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
   php-74-alpine:
     # The type of runner that the job will run on
@@ -474,9 +516,11 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
-            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
             ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
       - name: PHP ${{ env.version }} CLI
         uses: docker/build-push-action@v2
@@ -491,9 +535,11 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
-            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
             ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
   php-73:
     # The type of runner that the job will run on
@@ -536,6 +582,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm
             ${{ github.repository_owner }}/php:${{ env.version }}-fpm
       - name: PHP ${{ env.version }} Apache
@@ -551,6 +599,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-apache
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache
             ${{ github.repository_owner }}/php:${{ env.version }}-apache
       - name: PHP ${{ env.version }} CLI
@@ -566,6 +616,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli
             ${{ github.repository_owner }}/php:${{ env.version }}-cli
       - name: PHP ${{ env.version }} ZTS
@@ -581,6 +633,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-zts
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts
             ${{ github.repository_owner }}/php:${{ env.version }}-zts
   php-73-alpine:
@@ -624,6 +678,8 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-fpm-alpine
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
             ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
       - name: PHP ${{ env.version }} CLI
@@ -639,5 +695,7 @@ jobs:
           cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/php:${{ env.version }}-cli-alpine
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ github.sha }}
+            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ github.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
             ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
