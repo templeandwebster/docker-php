@@ -33,7 +33,7 @@ jobs:
         id: short-sha
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date -u +'%d%m%Y')"
+        run: echo "::set-output name=date::$(date -u +'%Y%m%d')"
       - name: Login to Dockerhub
         uses: docker/login-action@v1
         with:
@@ -161,7 +161,7 @@ jobs:
         id: short-sha
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date -u +'%d%m%Y')"
+        run: echo "::set-output name=date::$(date -u +'%Y%m%d')"
       - name: Login to Dockerhub
         uses: docker/login-action@v1
         with:
@@ -237,7 +237,7 @@ jobs:
         id: short-sha
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date -u +'%d%m%Y')"
+        run: echo "::set-output name=date::$(date -u +'%Y%m%d')"
       - name: Login to Dockerhub
         uses: docker/login-action@v1
         with:
@@ -355,7 +355,7 @@ jobs:
         id: short-sha
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date -u +'%d%m%Y')"
+        run: echo "::set-output name=date::$(date -u +'%Y%m%d')"
       - name: Login to Dockerhub
         uses: docker/login-action@v1
         with:
@@ -431,7 +431,7 @@ jobs:
         id: short-sha
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date -u +'%d%m%Y')"
+        run: echo "::set-output name=date::$(date -u +'%Y%m%d')"
       - name: Login to Dockerhub
         uses: docker/login-action@v1
         with:
@@ -549,7 +549,7 @@ jobs:
         id: short-sha
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date -u +'%d%m%Y')"
+        run: echo "::set-output name=date::$(date -u +'%Y%m%d')"
       - name: Login to Dockerhub
         uses: docker/login-action@v1
         with:
@@ -624,7 +624,7 @@ jobs:
         id: short-sha
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date -u +'%d%m%Y')"
+        run: echo "::set-output name=date::$(date -u +'%Y%m%d')"
       - name: Login to Dockerhub
         uses: docker/login-action@v1
         with:
@@ -733,7 +733,7 @@ jobs:
         id: short-sha
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date -u +'%d%m%Y')"
+        run: echo "::set-output name=date::$(date -u +'%Y%m%d')"
       - name: Login to Dockerhub
         uses: docker/login-action@v1
         with:
