@@ -82,11 +82,10 @@ RUN set -eux; \
     ; \
   docker-php-ext-install -j$(nproc) gd \
     ; \
-  CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install -j$(nproc) \
+  docker-php-ext-install -j$(nproc) \
     --ini-name 0-docker-php-ext-sockets.ini \
     sockets \
     ; \
-  CFLAGS="$PHP_CFLAGS"; \
   docker-php-ext-install -j$(nproc) \
     gettext \
     intl \
