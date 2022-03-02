@@ -95,6 +95,12 @@ RUN set -eux; \
     ; \
   pecl update-channels \
     ; \
+  pecl install --onlyreqdeps --nobuild apcu; \
+    cd "$(pecl config-get temp_dir)/apcu"; \
+    phpize; \
+    ./configure --enable-apcu; \
+    make && make install; \
+    cd -; \
   pecl install --onlyreqdeps --nobuild decimal; \
     cd "$(pecl config-get temp_dir)/decimal"; \
     phpize; \
@@ -109,12 +115,6 @@ RUN set -eux; \
     cd -; \
   pecl install --onlyreqdeps --nobuild msgpack; \
     cd "$(pecl config-get temp_dir)/msgpack"; \
-    phpize; \
-    ./configure; \
-    make && make install; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild apcu; \
-    cd "$(pecl config-get temp_dir)/apcu"; \
     phpize; \
     ./configure; \
     make && make install; \
@@ -137,34 +137,33 @@ RUN set -eux; \
     ./configure --enable-memcached-igbinary --enable-memcached-json --enable-memcached-session --enable-memcached-sasl --enable-memcached-msgpack; \
     make && make install; \
     cd -; \
-  pecl install --onlyreqdeps --nobuild ev; \
-    cd "$(pecl config-get temp_dir)/ev"; \
-    phpize; \
-    ./configure; \
-    make && make install; \
-    cd -; \
+#  pecl install --onlyreqdeps --nobuild ev; \
+#    cd "$(pecl config-get temp_dir)/ev"; \
+#    phpize; \
+#    ./configure; \
+#    make && make install; \
+#    cd -; \
   pecl install --onlyreqdeps --nobuild event; \
     cd "$(pecl config-get temp_dir)/event"; \
     phpize; \
-    ./configure --with-event-core --with-event-openssl --with-event-extra --with-event-pthreads; \
+    ./configure --with-event-core --enable-event-sockets --with-event-openssl --with-event-extra --with-event-pthreads; \
     make && make install; \
     cd -; \
-  pecl install --onlyreqdeps --nobuild xdebug; \
-    cd "$(pecl config-get temp_dir)/xdebug"; \
-    phpize; \
-    ./configure; \
-    make && make install; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild pcov; \
-    cd "$(pecl config-get temp_dir)/pcov"; \
-    phpize; \
-    ./configure; \
-    make && make install; \
-    cd -; \
+#  pecl install --onlyreqdeps --nobuild xdebug; \
+#    cd "$(pecl config-get temp_dir)/xdebug"; \
+#    phpize; \
+#    ./configure; \
+#    make && make install; \
+#    cd -; \
+#  pecl install --onlyreqdeps --nobuild pcov; \
+#    cd "$(pecl config-get temp_dir)/pcov"; \
+#    phpize; \
+#    ./configure; \
+#    make && make install; \
+#    cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-msgpack.ini msgpack; \
   docker-php-ext-enable \
-    apcu \
     event \
     ; \
   cp /usr/bin/envsubst /usr/local/bin/envsubst; \
