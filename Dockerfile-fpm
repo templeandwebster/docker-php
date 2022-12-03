@@ -58,6 +58,7 @@ RUN set -eux; \
     libmemcached-dev \
     libmpdec-dev \
     libmsgpack-dev \
+    libonig-dev \
     libpng-dev \
     libpng++-dev \
     libsodium-dev \

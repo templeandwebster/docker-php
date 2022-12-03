@@ -45,6 +45,7 @@ RUN set -eux; \
     libevent-dev \
     libjpeg-turbo-dev \
     libmemcached-dev \
+    linux-headers \
     libpng-dev \
     libsodium-dev \
     libwebp-dev \
@@ -54,6 +55,7 @@ RUN set -eux; \
     lz4-dev \
     mpdecimal-dev \
     msgpack-c-dev \
+    oniguruma-dev \
     openssl-dev \
     zlib-dev \
     ${PHP_EXTRA_BUILD_DEPS:-} \
