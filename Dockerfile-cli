@@ -58,7 +58,6 @@ RUN set -eux; \
     libmagickwand-dev \
     libmcrypt-dev \
     libmemcached-dev \
-    libmcrypt-dev \
     libmpdec-dev \
     libmsgpack-dev \
     libonig-dev \
