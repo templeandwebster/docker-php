@@ -89,6 +89,7 @@ RUN set -eux; \
     bcmath \
     gettext \
     intl \
+    mysqli \
     opcache \
     pcntl \
     pdo_mysql \
