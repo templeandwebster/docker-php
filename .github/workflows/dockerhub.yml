@@ -77,8 +77,6 @@ jobs:
             ${{ github.repository_owner }}/php:${{ env.version }}-fpm
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
-            ghcr.io/${{ github.repository_owner }}/php:fpm
-            ${{ github.repository_owner }}/php:fpm
       - name: PHP ${{ env.version }} Apache
         uses: docker/build-push-action@v3
         with:
@@ -100,8 +98,6 @@ jobs:
             ${{ github.repository_owner }}/php:${{ env.version }}-apache
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
-            ghcr.io/${{ github.repository_owner }}/php:apache
-            ${{ github.repository_owner }}/php:apache
       - name: PHP ${{ env.version }} CLI
         uses: docker/build-push-action@v3
         with:
@@ -123,10 +119,6 @@ jobs:
             ${{ github.repository_owner }}/php:${{ env.version }}-cli
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
-            ghcr.io/${{ github.repository_owner }}/php:cli
-            ${{ github.repository_owner }}/php:cli
-            ghcr.io/${{ github.repository_owner }}/php:latest
-            ${{ github.repository_owner }}/php:latest
       - name: PHP ${{ env.version }} ZTS
         uses: docker/build-push-action@v3
         with:
@@ -148,8 +140,6 @@ jobs:
             ${{ github.repository_owner }}/php:${{ env.version }}-zts
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
-            ghcr.io/${{ github.repository_owner }}/php:zts
-            ${{ github.repository_owner }}/php:zts
   php-82-alpine:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
