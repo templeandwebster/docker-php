@@ -136,12 +136,18 @@ RUN set -eux; \
     ./configure --enable-memcached-igbinary --enable-memcached-json --enable-memcached-session --enable-memcached-sasl --enable-memcached-msgpack; \
     make && make install; \
     cd -; \
-#  pecl install --onlyreqdeps --nobuild ev; \
-#    cd "$(pecl config-get temp_dir)/ev"; \
-#    phpize; \
-#    ./configure; \
-#    make && make install; \
-#    cd -; \
+  pecl install --onlyreqdeps --nobuild xhprof; \
+    cd "$(pecl config-get temp_dir)/xhprof/extension"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
+  pecl install --onlyreqdeps --nobuild xdebug; \
+    cd "$(pecl config-get temp_dir)/xdebug"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
   pecl install --onlyreqdeps --nobuild event; \
     cd "$(pecl config-get temp_dir)/event"; \
     phpize; \
@@ -149,7 +155,7 @@ RUN set -eux; \
     make && make install; \
     cd -; \
   set +e; \
-  $(dpkg --compare-versions ${PHP_VERSION} le 8.1) \
+  $(dpkg --compare-versions ${PHP_VERSION} lt 8.2) \
   ; if [ "$?" -eq "0" ]; then \
   pecl install --onlyreqdeps --nobuild mcrypt; \
     cd "$(pecl config-get temp_dir)/mcrypt"; \
