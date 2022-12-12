@@ -293,13 +293,9 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ needs.build-versions.outputs.date }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ needs.build-versions.outputs.date }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ needs.build-versions.outputs.sha }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-zts-${{ needs.build-versions.outputs.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts
-            ${{ github.repository_owner }}/php:${{ env.version }}-zts
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
-            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts
   php-81-alpine:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -339,13 +335,9 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine-${{ needs.build-versions.outputs.date }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine-${{ needs.build-versions.outputs.date }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine-${{ needs.build-versions.outputs.sha }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-apline-${{ needs.build-versions.outputs.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-alpine
-            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-apline
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
-            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
       - name: PHP ${{ env.version }} CLI
         uses: docker/build-push-action@v3
         with:
@@ -360,13 +352,9 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ needs.build-versions.outputs.date }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ needs.build-versions.outputs.date }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ needs.build-versions.outputs.sha }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine-${{ needs.build-versions.outputs.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
-            ${{ github.repository_owner }}/php:${{ env.version }}-cli-alpine
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
-            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
       - name: PHP ${{ env.version }} ZTS
         uses: docker/build-push-action@v3
         with:
@@ -381,13 +369,9 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts-alpine-${{ needs.build-versions.outputs.date }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-zts-alpine-${{ needs.build-versions.outputs.date }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts-alpine-${{ needs.build-versions.outputs.sha }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-zts-alpine-${{ needs.build-versions.outputs.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-zts-alpine
-            ${{ github.repository_owner }}/php:${{ env.version }}-zts-alpine
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts-alpine
-            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-zts-alpine
   php-80:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -427,13 +411,9 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ needs.build-versions.outputs.date }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ needs.build-versions.outputs.date }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ needs.build-versions.outputs.sha }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-fpm-${{ needs.build-versions.outputs.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-fpm
-            ${{ github.repository_owner }}/php:${{ env.version }}-fpm
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
-            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
       - name: PHP ${{ env.version }} Apache
         uses: docker/build-push-action@v3
         with:
@@ -448,13 +428,9 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ needs.build-versions.outputs.date }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ needs.build-versions.outputs.date }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ needs.build-versions.outputs.sha }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-apache-${{ needs.build-versions.outputs.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-apache
-            ${{ github.repository_owner }}/php:${{ env.version }}-apache
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
-            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
       - name: PHP ${{ env.version }} CLI
         uses: docker/build-push-action@v3
         with:
@@ -469,13 +445,9 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ needs.build-versions.outputs.date }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ needs.build-versions.outputs.date }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ needs.build-versions.outputs.sha }}
-            ${{ github.repository_owner }}/php:${{ env.version }}-cli-${{ needs.build-versions.outputs.sha }}
             ghcr.io/${{ github.repository_owner }}/php:${{ env.version }}-cli
-            ${{ github.repository_owner }}/php:${{ env.version }}-cli
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
-            ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
       - name: PHP ${{ env.version }} ZTS
         uses: docker/build-push-action@v3
         with:
