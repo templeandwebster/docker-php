@@ -207,6 +207,7 @@ RUN set -eux; \
   ; sed -i "s/;emergency_restart_interval\s*=\s*.*/emergency_restart_interval = 1m/g" $PHP_INI_DIR/../php-fpm.conf \
   ; sed -i "s/;process_control_timeout\s*=\s*.*/process_control_timeout = 10s/g" $PHP_INI_DIR/../php-fpm.conf \
   ;
-
+COPY --from=composer/composer /usr/bin/composer /usr/local/bin/composer
+RUN composer config --global use-github-api false
 WORKDIR /var/www/html
 CMD ["php-fpm"]
