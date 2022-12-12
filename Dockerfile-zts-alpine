@@ -142,7 +142,12 @@ RUN set -eux; \
     ./configure; \
     make && make install; \
     cd -; \
-  pecl install --onlyreqdeps --nobuild xdebug; \
+  set +e; \
+  $(dpkg --compare-versions ${PHP_VERSION} lt 8) \
+  ; if [ "$?" -eq "0" ]; then pecl install --onlyreqdeps --nobuild xdebug-3.1.6; \
+    else pecl install --onlyreqdeps --nobuild xdebug; \
+    fi; \
+  set -e; \
     cd "$(pecl config-get temp_dir)/xdebug"; \
     phpize; \
     ./configure; \
