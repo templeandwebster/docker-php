@@ -191,6 +191,14 @@ RUN set -eux; \
   ; sed -i "s|^\(;\)*realpath_cache_ttl\s*=\s*\(.*\)|realpath_cache_ttl=3600|g" $PHP_INI_DIR/php.ini \
   ; sed -i "s|^\(;\)*zlib.output_compression\s*=\s*\(.*\)|zlib.output_compression=On|g" $PHP_INI_DIR/php.ini \
   ;
+RUN docker-php-ext-enable  \
+    apcu \
+    memcached \
+    opcache \
+    redis \
+    xdebug \
+    xhprof \
+    ;
 COPY --from=composer/composer /usr/bin/composer /usr/local/bin/composer
 RUN composer config --global use-github-api false
 WORKDIR /var/www/html
