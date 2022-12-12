@@ -245,6 +245,14 @@ RUN set -eux; \
   ; echo "LogFormat \"\\\"%{X-Forwarded-For}i %h\\\" %l %u %t \\\"%r\\\" %>s %O \\\"%{Referer}i\\\" \\\"%{User-Agent}i\\\"\" combined" > $APACHE_CONFDIR/conf-available/log_combined.conf \
   ; a2enconf log_combined \
   ;
+RUN docker-php-ext-enable  \
+    apcu \
+    memcached \
+    opcache \
+    redis \
+    xdebug \
+    xhprof \
+    ;
 COPY --from=composer/composer /usr/bin/composer /usr/local/bin/composer
 RUN composer config --global use-github-api false
 WORKDIR /var/www/html
