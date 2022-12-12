@@ -26,6 +26,7 @@ RUN set -eux; \
     libmemcached11 \
     libmemcachedutil2 \
     ${LIBLZ4} \
+    libmcrypt4 \
     ${LIBMPDEC} \
     libmsgpackc2 \
     libpng16-16 \
@@ -55,9 +56,11 @@ RUN set -eux; \
     liblz4-dev \
     libmagick++-dev \
     libmagickwand-dev \
+    libmcrypt-dev \
     libmemcached-dev \
     libmpdec-dev \
     libmsgpack-dev \
+    libonig-dev \
     libpng-dev \
     libpng++-dev \
     libsodium-dev \
@@ -83,15 +86,22 @@ RUN set -eux; \
   docker-php-ext-install -j$(nproc) gd \
     ; \
   docker-php-ext-install -j$(nproc) \
-    --ini-name 0-docker-php-ext-sockets.ini \
-    sockets \
-    ; \
-  docker-php-ext-install -j$(nproc) \
+    bcmath \
     gettext \
     intl \
+    mysqli \
     opcache \
+    pdo_mysql \
     pcntl \
     zip \
+    ; \
+  rm -rf $PHP_INI_DIR/conf.d/docker-php-ext-*.ini \
+    ; \
+  docker-php-ext-enable sodium \
+    ; \
+  docker-php-ext-install -j$(nproc) \
+    --ini-name 0-docker-php-ext-sockets.ini \
+    sockets \
     ; \
   pecl update-channels \
     ; \
@@ -137,24 +147,35 @@ RUN set -eux; \
     ./configure --enable-memcached-igbinary --enable-memcached-json --enable-memcached-session --enable-memcached-sasl --enable-memcached-msgpack; \
     make && make install; \
     cd -; \
-#  pecl install --onlyreqdeps --nobuild ev; \
-#    cd "$(pecl config-get temp_dir)/ev"; \
-#    phpize; \
-#    ./configure; \
-#    make && make install; \
-#    cd -; \
+  pecl install --onlyreqdeps --nobuild xhprof; \
+    cd "$(pecl config-get temp_dir)/xhprof/extension"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
+  pecl install --onlyreqdeps --nobuild xdebug; \
+    cd "$(pecl config-get temp_dir)/xdebug"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
   pecl install --onlyreqdeps --nobuild event; \
     cd "$(pecl config-get temp_dir)/event"; \
     phpize; \
     ./configure --with-event-core --enable-event-sockets --with-event-openssl --with-event-extra; \
     make && make install; \
     cd -; \
-#  pecl install --onlyreqdeps --nobuild xdebug; \
-#    cd "$(pecl config-get temp_dir)/xdebug"; \
-#    phpize; \
-#    ./configure; \
-#    make && make install; \
-#    cd -; \
+  set +e; \
+  $(dpkg --compare-versions ${PHP_VERSION} lt 8.2) \
+  ; if [ "$?" -eq "0" ]; then \
+  pecl install --onlyreqdeps --nobuild mcrypt; \
+    cd "$(pecl config-get temp_dir)/mcrypt"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
+  fi; \
+  set -e; \
   pecl install --onlyreqdeps --nobuild pcov; \
     cd "$(pecl config-get temp_dir)/pcov"; \
     phpize; \
@@ -163,9 +184,6 @@ RUN set -eux; \
     cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-msgpack.ini msgpack; \
-  docker-php-ext-enable \
-    event \
-    ; \
   cp /usr/bin/envsubst /usr/local/bin/envsubst; \
   apt-mark auto '.*' > /dev/null; \
   [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
@@ -198,7 +216,5 @@ RUN set -eux; \
   ; echo "LogFormat \"\\\"%{X-Forwarded-For}i %h\\\" %l %u %t \\\"%r\\\" %>s %O \\\"%{Referer}i\\\" \\\"%{User-Agent}i\\\"\" combined" > $APACHE_CONFDIR/conf-available/log_combined.conf \
   ; a2enconf log_combined \
   ;
-
-COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/html
