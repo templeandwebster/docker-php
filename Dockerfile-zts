@@ -190,7 +190,7 @@ RUN set -eux; \
   pecl install --onlyreqdeps --nobuild openswoole; \
     cd "$(pecl config-get temp_dir)/openswoole"; \
     phpize; \
-    ./configure --enable-sockets --enable-openssl --enable-http2 --enable-hook-curl; \
+    ./configure; \
     make && make install; \
     cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
