@@ -187,12 +187,12 @@ RUN set -eux; \
     ./configure; \
     make && make install; \
     cd -; \
-  pecl install --onlyreqdeps --nobuild openswoole; \
-    cd "$(pecl config-get temp_dir)/openswoole"; \
-    phpize; \
-    ./configure; \
-    make && make install; \
-    cd -; \
+#  pecl install --onlyreqdeps --nobuild openswoole; \
+#    cd "$(pecl config-get temp_dir)/openswoole"; \
+#    phpize; \
+#    ./configure; \
+#    make && make install; \
+#    cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-msgpack.ini msgpack; \
   cp /usr/bin/envsubst /usr/local/bin/envsubst; \
