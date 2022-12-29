@@ -16,6 +16,7 @@ RUN set -eux; \
     git \
     imagemagick \
     ${LIBAVIF} \
+    libc-ares2 \
     libcmph0 \
     libedit2 \
     ${LIBEVENTEXTRA} \
@@ -45,6 +46,7 @@ RUN set -eux; \
     gettext-base \
     libargon2-dev \
     libavif-dev \
+    libc-ares-dev \
     libcmph-dev \
     libcurl4-openssl-dev \
     libedit-dev \

@@ -8,6 +8,7 @@ RUN set -eux; \
   apk update \
   && apk add --no-cache \
     bash \
+    c-ares \
     freetype \
     git \
     imagemagick \
@@ -34,6 +35,7 @@ RUN set -eux; \
   apk add --no-cache --virtual .build-deps \
     $PHPIZE_DEPS \
     argon2-dev \
+    c-ares-dev \
     curl-dev \
     cyrus-sasl-dev \
     freetype-dev \
@@ -179,7 +181,7 @@ RUN set -eux; \
   pecl install --onlyreqdeps --nobuild openswoole; \
     cd "$(pecl config-get temp_dir)/openswoole"; \
     phpize; \
-    ./configure --enable-sockets --enable-openssl --enable-http2 --enable-hook-curl --enable-thread-context; \
+    ./configure --enable-sockets --enable-openssl --enable-http2 --enable-hook-curl --enable-thread-context --enable-cares; \
     make && make install; \
     cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
