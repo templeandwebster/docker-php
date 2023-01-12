@@ -16,6 +16,7 @@ RUN set -eux; \
     git \
     imagemagick \
     ${LIBAVIF} \
+    libc-ares2 \
     libcmph0 \
     libedit2 \
     ${LIBEVENTEXTRA} \
@@ -45,6 +46,7 @@ RUN set -eux; \
     gettext-base \
     libargon2-dev \
     libavif-dev \
+    libc-ares-dev \
     libcmph-dev \
     libcurl4-openssl-dev \
     libedit-dev \
@@ -185,6 +187,12 @@ RUN set -eux; \
     cd "$(pecl config-get temp_dir)/pcov"; \
     phpize; \
     ./configure; \
+    make && make install; \
+    cd -; \
+  pecl install --onlyreqdeps --nobuild openswoole; \
+    cd "$(pecl config-get temp_dir)/openswoole"; \
+    phpize; \
+    ./configure --enable-sockets --enable-openssl --enable-http2 --enable-hook-curl --enable-thread-context --enable-cares; \
     make && make install; \
     cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
