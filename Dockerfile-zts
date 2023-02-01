@@ -183,6 +183,12 @@ RUN set -eux; \
     cd -; \
   fi; \
   set -e; \
+  pecl install --onlyreqdeps --nobuild ast; \
+    cd "$(pecl config-get temp_dir)/ast"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
   pecl install --onlyreqdeps --nobuild pcov; \
     cd "$(pecl config-get temp_dir)/pcov"; \
     phpize; \
