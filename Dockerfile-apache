@@ -4,7 +4,10 @@ LABEL org.opencontainers.image.description="PHP base image with commonly used ex
      "com.koalaphils.vendor"="Koala Software Technology Innovations" \
      "com.koalaphils.image.author"="mdprotacio@outlook.com"
 
-RUN set -eux; \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
+    --mount=type=cache,target=/var/lib/apt,sharing=private \
+    --mount=type=tmpfs,target=/tmp \
+  set -eux; \
   apt-get update \
   && LIBAVIF=`apt-cache pkgnames libavif | head -1` \
   && LIBEVENTEXTRA=`apt-cache pkgnames libevent-extra | head -1` \
@@ -215,7 +218,7 @@ RUN set -eux; \
       | xargs -r apt-mark manual \
   ; \
   apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImport=false; \
-  rm -rf /tmp/* ~/.pearrc /var/lib/apt/lists/* /var/cache/*; \
+#  rm -rf /tmp/* ~/.pearrc /var/lib/apt/lists/* /var/cache/*; \
   php --version \
   ; \
   a2enmod \

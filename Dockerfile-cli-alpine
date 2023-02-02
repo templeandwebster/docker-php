@@ -4,7 +4,10 @@ LABEL org.opencontainers.image.description="PHP base image with commonly used ex
      "com.koalaphils.vendor"="Koala Software Technology Innovations" \
      "com.koalaphils.image.author"="mdprotacio@outlook.com"
 
-RUN set -eux; \
+RUN --mount=type=cache,target=/var/cache/apk,sharing=private \
+    --mount=type=cache,target=/var/lib/apk,sharing=private \
+    --mount=type=tmpfs,target=/tmp \
+  set -eux; \
   apk update \
   && apk add --no-cache \
     bash \
@@ -202,7 +205,7 @@ RUN set -eux; \
   apk add --no-cache $runDeps; \
   \
   apk del --no-network .build-deps; \
-  rm -rf /tmp/* ~/.pearrc; \
+#  rm -rf /tmp/* ~/.pearrc; \
   php --version \
   ; mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini \
   ; sed -i "s|^expose_php\s*=\s*\(.*\)|expose_php=Off|g" $PHP_INI_DIR/php.ini \
