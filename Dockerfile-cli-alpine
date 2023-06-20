@@ -28,7 +28,6 @@ RUN --mount=type=cache,target=/var/cache/apk,sharing=private \
     libxpm \
     libzip \
     lz4-libs \
-    mpdecimal \
     msgpack-c \
     netcat-openbsd \
     tzdata \
@@ -60,7 +59,6 @@ RUN --mount=type=cache,target=/var/cache/apk,sharing=private \
     libxpm-dev \
     libzip-dev \
     lz4-dev \
-    mpdecimal-dev \
     msgpack-c-dev \
     oniguruma-dev \
     openssl-dev \
@@ -104,12 +102,6 @@ RUN --mount=type=cache,target=/var/cache/apk,sharing=private \
     cd "$(pecl config-get temp_dir)/apcu"; \
     phpize; \
     ./configure --enable-apcu; \
-    make && make install; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild decimal; \
-    cd "$(pecl config-get temp_dir)/decimal"; \
-    phpize; \
-    ./configure; \
     make && make install; \
     cd -; \
   pecl install --onlyreqdeps --nobuild igbinary; \

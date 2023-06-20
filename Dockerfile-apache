@@ -1,5 +1,5 @@
 ARG PHP_VERSION=8
-FROM php:${PHP_VERSION}-apache-bullseye
+FROM php:${PHP_VERSION}-apache
 LABEL org.opencontainers.image.description="PHP base image with commonly used extensions pre-installed" \
      "com.koalaphils.vendor"="Koala Software Technology Innovations" \
      "com.koalaphils.image.author"="mdprotacio@outlook.com"
@@ -14,7 +14,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
   && LIBEVENTOPENSSL=`apt-cache pkgnames libevent-openssl | head -1` \
   && LIBEVENTPTHREADS=`apt-cache pkgnames libevent-pthreads | head -1` \
   && LIBLZ4=`apt-cache pkgnames liblz4 | head -1` \
-  && LIBMPDEC=`apt-cache pkgnames libmpdec | head -1` \
   && apt-get install --no-install-recommends -y \
     git \
     imagemagick \
@@ -31,13 +30,12 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
     libmemcachedutil2 \
     ${LIBLZ4} \
     libmcrypt4 \
-    ${LIBMPDEC} \
     libmsgpackc2 \
     libpng16-16 \
     libsodium23 \
     libxpm4 \
     libzip4 \
-    netcat \
+    netcat-traditional \
     tzdata \
     unzip \
     zlib1g \
@@ -63,7 +61,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
     libmagickwand-dev \
     libmcrypt-dev \
     libmemcached-dev \
-    libmpdec-dev \
     libmsgpack-dev \
     libonig-dev \
     libpng-dev \
@@ -115,12 +112,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
     cd "$(pecl config-get temp_dir)/apcu"; \
     phpize; \
     ./configure --enable-apcu; \
-    make && make install; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild decimal; \
-    cd "$(pecl config-get temp_dir)/decimal"; \
-    phpize; \
-    ./configure; \
     make && make install; \
     cd -; \
   pecl install --onlyreqdeps --nobuild igbinary; \
