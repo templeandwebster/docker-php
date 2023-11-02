@@ -195,7 +195,7 @@ RUN set -eux; \
   apk add --no-cache $runDeps; \
   \
   apk del --no-network .build-deps; \
-#  rm -rf /tmp/* ~/.pearrc; \
+  rm -rf /tmp/* ~/.pearrc; \
   php --version \
   ; mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini \
   ; sed -i "s|^expose_php\s*=\s*\(.*\)|expose_php=Off|g" $PHP_INI_DIR/php.ini \

@@ -207,7 +207,7 @@ RUN set -eux; \
       | xargs -r apt-mark manual \
   ; \
   apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImport=false; \
-#  rm -rf /tmp/* ~/.pearrc /var/lib/apt/lists/* /var/cache/*; \
+  rm -rf /tmp/* ~/.pearrc /var/lib/apt/lists/* /var/cache/*; \
   php --version \
   ; \
   a2enmod \
