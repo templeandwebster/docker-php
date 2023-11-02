@@ -4,10 +4,7 @@ LABEL org.opencontainers.image.description="PHP base image with commonly used ex
      "com.koalaphils.vendor"="Koala Software Technology Innovations" \
      "com.koalaphils.image.author"="mdprotacio@outlook.com"
 
-RUN --mount=type=cache,target=/var/cache/apk,sharing=private \
-    --mount=type=cache,target=/var/lib/apk,sharing=private \
-    --mount=type=tmpfs,target=/tmp \
-  set -eux; \
+RUN set -eux; \
   apk update \
   && apk add --no-cache \
     bash \
