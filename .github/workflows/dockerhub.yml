@@ -42,22 +42,22 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to Dockerhub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Login to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: PHP ${{ env.version }} FPM
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-fpm
@@ -80,7 +80,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:fpm
             ${{ github.repository_owner }}/php:fpm
       - name: PHP ${{ env.version }} Apache
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-apache
@@ -103,7 +103,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:apache
             ${{ github.repository_owner }}/php:apache
       - name: PHP ${{ env.version }} CLI
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-cli
@@ -128,7 +128,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:latest
             ${{ github.repository_owner }}/php:latest
       - name: PHP ${{ env.version }} ZTS
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-zts
@@ -166,22 +166,22 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to Dockerhub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Login to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: PHP ${{ env.version }} FPM
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-fpm-alpine
@@ -204,7 +204,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:fpm-alpine
             ${{ github.repository_owner }}/php:fpm-alpine
       - name: PHP ${{ env.version }} CLI
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-cli-alpine
@@ -227,7 +227,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:cli-alpine
             ${{ github.repository_owner }}/php:cli-alpine
       - name: PHP ${{ env.version }} ZTS
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-zts-alpine
@@ -265,22 +265,22 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to Dockerhub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Login to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: PHP ${{ env.version }} FPM
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-fpm
@@ -301,7 +301,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
       - name: PHP ${{ env.version }} Apache
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-apache
@@ -322,7 +322,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
       - name: PHP ${{ env.version }} CLI
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-cli
@@ -343,7 +343,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
       - name: PHP ${{ env.version }} ZTS
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-zts
@@ -379,22 +379,22 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to Dockerhub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Login to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: PHP ${{ env.version }} FPM
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-fpm-alpine
@@ -415,7 +415,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
       - name: PHP ${{ env.version }} CLI
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-cli-alpine
@@ -436,7 +436,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
       - name: PHP ${{ env.version }} ZTS
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-zts-alpine
@@ -472,22 +472,22 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to Dockerhub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Login to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: PHP ${{ env.version }} FPM
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-fpm
@@ -508,7 +508,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm
       - name: PHP ${{ env.version }} Apache
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-apache
@@ -529,7 +529,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-apache
       - name: PHP ${{ env.version }} CLI
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-cli
@@ -550,7 +550,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli
       - name: PHP ${{ env.version }} ZTS
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-zts
@@ -586,22 +586,22 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to Dockerhub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Login to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: PHP ${{ env.version }} FPM
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-fpm-alpine
@@ -622,7 +622,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-fpm-alpine
       - name: PHP ${{ env.version }} CLI
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-cli-alpine
@@ -643,7 +643,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
             ${{ github.repository_owner }}/php:${{ env.alternate_version }}-cli-alpine
       - name: PHP ${{ env.version }} ZTS
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile-zts-alpine
