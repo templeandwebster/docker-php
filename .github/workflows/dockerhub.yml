@@ -60,8 +60,8 @@ jobs:
   php-debian:
     needs: build-versions
     strategy:
+      max-parallel: 4
       matrix:
-        max-parallel: 4
         variant: [fpm, cli, apache, zts]
         version: ['8.1', '8.0']
     uses: ./.github/workflows/build.yml
@@ -80,8 +80,8 @@ jobs:
   php-alpine:
     needs: build-versions
     strategy:
+      max-parallel: 4
       matrix:
-        max-parallel: 4
         variant: [fpm-alpine, cli-alpine, zts-alpine]
         version: ['8.2', '8', '8.1', '8.0']
     uses: ./.github/workflows/build.yml
