@@ -30,7 +30,7 @@ jobs:
         run: echo "date=$(date -u +'%Y%m%d')" >> $GITHUB_OUTPUT
 
   php-latest:
-    needs: build-versions
+    needs: [build-versions, php-debian]
     strategy:
       matrix:
         variant: [fpm, cli, apache, zts]
@@ -61,6 +61,7 @@ jobs:
     needs: build-versions
     strategy:
       matrix:
+        max-parallel: 4
         variant: [fpm, cli, apache, zts]
         version: ['8.1', '8.0']
     uses: ./.github/workflows/build.yml
@@ -80,6 +81,7 @@ jobs:
     needs: build-versions
     strategy:
       matrix:
+        max-parallel: 4
         variant: [fpm-alpine, cli-alpine, zts-alpine]
         version: ['8.2', '8', '8.1', '8.0']
     uses: ./.github/workflows/build.yml
