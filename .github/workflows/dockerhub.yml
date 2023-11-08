@@ -63,7 +63,7 @@ jobs:
       max-parallel: 4
       matrix:
         variant: [fpm, cli, apache, zts]
-        version: ['8.1', '8.0']
+        version: ['8.3.0RC5', '8.1', '8.0']
     uses: ./.github/workflows/build.yml
     secrets: inherit
     with:
@@ -83,7 +83,7 @@ jobs:
       max-parallel: 4
       matrix:
         variant: [fpm-alpine, cli-alpine, zts-alpine]
-        version: ['8.2', '8', '8.1', '8.0']
+        version: ['8.3.0RC5', '8.2', '8', '8.1', '8.0']
     uses: ./.github/workflows/build.yml
     secrets: inherit
     with:
