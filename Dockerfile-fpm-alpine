@@ -192,7 +192,12 @@ RUN set -eux; \
     ./configure; \
     make && make install; \
     cd -; \
-  pecl install --onlyreqdeps --nobuild openswoole; \
+  set +e; \
+  $(dpkg --compare-versions ${PHP_VERSION} lt 8.1) \
+  ; if [ "$?" -eq "0" ]; then pecl install --onlyreqdeps --nobuild openswoole-4.12.1; \
+    else pecl install --onlyreqdeps --nobuild openswoole; \
+    fi; \
+  set -e; \
     cd "$(pecl config-get temp_dir)/openswoole"; \
     phpize; \
     ./configure --enable-sockets --enable-openssl --enable-http2 --enable-hook-curl --enable-thread-context --enable-cares; \
