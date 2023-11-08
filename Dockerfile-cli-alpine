@@ -28,6 +28,7 @@ RUN set -eux; \
     msgpack-c \
     netcat-openbsd \
     tzdata \
+    unixodbc \
     unzip \
     zlib \
   ; \
@@ -59,6 +60,7 @@ RUN set -eux; \
     msgpack-c-dev \
     oniguruma-dev \
     openssl-dev \
+    unixodbc-dev \
     zlib-dev \
     ${PHP_EXTRA_BUILD_DEPS:-} \
   ; export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
@@ -83,6 +85,7 @@ RUN set -eux; \
     opcache \
     pcntl \
     pdo_mysql \
+    xml \
     zip \
     ; \
   rm -rf $PHP_INI_DIR/conf.d/docker-php-ext-*.ini \
@@ -115,6 +118,18 @@ RUN set -eux; \
     cd -; \
   pecl install --onlyreqdeps --nobuild imagick; \
     cd "$(pecl config-get temp_dir)/imagick"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
+  pecl install --onlyreqdeps --nobuild sqlsrv; \
+    cd "$(pecl config-get temp_dir)/sqlsrv"; \
+    phpize; \
+    ./configure; \
+    make && make install; \
+    cd -; \
+  pecl install --onlyreqdeps --nobuild pdo_sqlsrv; \
+    cd "$(pecl config-get temp_dir)/pdo_sqlsrv"; \
     phpize; \
     ./configure; \
     make && make install; \
