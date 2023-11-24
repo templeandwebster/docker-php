@@ -42,20 +42,12 @@ jobs:
       version: ${{ matrix.version }}
       variant: ${{ matrix.variant }}
       tags: |
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.variant }}
-        ${{ github.repository_owner }}/php:${{ matrix.variant }}
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant}}-${{ needs.build-versions.outputs.sha }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.sha }}
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant}}-${{ needs.build-versions.outputs.sha }}
-        ${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.sha }}
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant }}
-        ${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant }}
 
   php-debian:
     needs: build-versions
@@ -71,11 +63,8 @@ jobs:
       variant: ${{ matrix.variant }}
       tags: |
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant}}-${{ needs.build-versions.outputs.sha }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.sha }}
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
 
   php-alpine:
     needs: build-versions
@@ -91,8 +80,5 @@ jobs:
       variant: ${{ matrix.variant }}
       tags: |
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant}}-${{ needs.build-versions.outputs.sha }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.sha }}
         ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
