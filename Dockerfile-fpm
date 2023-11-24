@@ -4,16 +4,13 @@ LABEL org.opencontainers.image.description="PHP base image with commonly used ex
      "com.koalaphils.vendor"="Koala Software Technology Innovations" \
      "com.koalaphils.image.author"="mdprotacio@outlook.com"
 
-RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
-    --mount=type=cache,target=/var/lib/apt,sharing=private \
-    --mount=type=tmpfs,target=/tmp \
-  set -eux; \
+RUN set -eux; \
   apt-get update \
-  && LIBAVIF=`apt-cache pkgnames libavif | head -1` \
-  && LIBEVENTEXTRA=`apt-cache pkgnames libevent-extra | head -1` \
-  && LIBEVENTOPENSSL=`apt-cache pkgnames libevent-openssl | head -1` \
-  && LIBEVENTPTHREADS=`apt-cache pkgnames libevent-pthreads | head -1` \
-  && LIBLZ4=`apt-cache pkgnames liblz4 | head -1` \
+  && LIBAVIF=`apt-cache pkgnames libavif | sort -V | head -1` \
+  && LIBEVENTEXTRA=`apt-cache pkgnames libevent-extra | sort -V | head -1` \
+  && LIBEVENTOPENSSL=`apt-cache pkgnames libevent-openssl | sort -V | head -1` \
+  && LIBEVENTPTHREADS=`apt-cache pkgnames libevent-pthreads | sort -V | head -1` \
+  && LIBLZ4=`apt-cache pkgnames liblz4 | sort -V | head -1` \
   && apt-get install --no-install-recommends -y \
     git \
     imagemagick \
@@ -38,6 +35,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
     netcat-traditional \
     tzdata \
     unzip \
+    unixodbc \
+    wget \
     zlib1g \
   ; \
   apt-mark manual '.*' > /dev/null; \
@@ -72,14 +71,13 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
     libxpm-dev \
     libzip-dev \
     libbz2-dev \
+    unixodbc-dev \
     zlib1g-dev \
     ${PHP_EXTRA_BUILD_DEPS:-} \
   ; export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
   ; set +e \
-  ; $(dpkg --compare-versions ${PHP_VERSION} ge 8.1) \
-  ; if [ "$?" -eq "0" ]; then WITH_AVIF=--with-avif; else WITH_AVIF=; fi \
-  ; $(dpkg --compare-versions ${PHP_VERSION} ge 7.4) \
-  ; if [ "$?" -eq "0" ]; then WITH_PARAMS="--with-jpeg --with-xpm --with-webp --with-freetype ${WITH_AVIF}"; \
+  ; if dpkg --compare-versions ${PHP_VERSION} ge 8.1; then WITH_AVIF=--with-avif; else WITH_AVIF=; fi \
+  ; if dpkg --compare-versions ${PHP_VERSION} ge 7.4; then WITH_PARAMS="--with-jpeg --with-xpm --with-webp --with-freetype ${WITH_AVIF}"; \
     else WITH_PARAMS="--with-jpeg-dir=/usr/include --with-png-dir=/usr/include --with-webp-dir=/usr/include --with-freetype-dir=/usr/include --with-xpm-dir=/usr/include"; fi \
   ; set -e \
   ; \
@@ -96,6 +94,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
     opcache \
     pcntl \
     pdo_mysql \
+    xml \
     zip \
     ; \
   rm -rf $PHP_INI_DIR/conf.d/docker-php-ext-*.ini \
@@ -112,89 +111,110 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
     cd "$(pecl config-get temp_dir)/apcu"; \
     phpize; \
     ./configure --enable-apcu; \
-    make && make install; \
+    make && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild igbinary; \
     cd "$(pecl config-get temp_dir)/igbinary"; \
     phpize; \
     ./configure; \
-    make && make install; \
+    make && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild msgpack; \
     cd "$(pecl config-get temp_dir)/msgpack"; \
     phpize; \
     ./configure; \
-    make && make install; \
+    make && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild imagick; \
     cd "$(pecl config-get temp_dir)/imagick"; \
     phpize; \
     ./configure; \
-    make && make install; \
+    make && make install || exit 1; \
+    cd -; \
+  pecl install --onlyreqdeps --nobuild sqlsrv; \
+    cd "$(pecl config-get temp_dir)/sqlsrv"; \
+    phpize; \
+    ./configure; \
+    make && make install || exit 1; \
+    cd -; \
+  pecl install --onlyreqdeps --nobuild pdo_sqlsrv; \
+    cd "$(pecl config-get temp_dir)/pdo_sqlsrv"; \
+    phpize; \
+    ./configure; \
+    make && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild redis; \
     cd "$(pecl config-get temp_dir)/redis"; \
     phpize; \
     ./configure --enable-redis-igbinary --enable-redis-json --enable-redis-msgpack --enable-redis-lz4 --with-liblz4=/usr/include; \
-    make && make install; \
+    make && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild memcached; \
     cd "$(pecl config-get temp_dir)/memcached"; \
     phpize; \
     ./configure --enable-memcached-igbinary --enable-memcached-json --enable-memcached-session --enable-memcached-sasl --enable-memcached-msgpack; \
-    make && make install; \
+    make && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild xhprof; \
     cd "$(pecl config-get temp_dir)/xhprof/extension"; \
     phpize; \
     ./configure; \
-    make && make install; \
+    make && make install || exit 1; \
     cd -; \
   set +e; \
   $(dpkg --compare-versions ${PHP_VERSION} lt 8) \
   ; if [ "$?" -eq "0" ]; then pecl install --onlyreqdeps --nobuild xdebug-3.1.6; \
     else pecl install --onlyreqdeps --nobuild xdebug; \
     fi; \
+  set +e; \
+    if dpkg --compare-versions ${PHP_VERSION} lt 8; \
+    then pecl install --onlyreqdeps --nobuild xdebug-3.1.6; \
+    else pecl install --onlyreqdeps --nobuild xdebug; \
+    fi; \
   set -e; \
     cd "$(pecl config-get temp_dir)/xdebug"; \
     phpize; \
     ./configure; \
-    make && make install; \
+    make && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild event; \
     cd "$(pecl config-get temp_dir)/event"; \
     phpize; \
     ./configure --with-event-core --enable-event-sockets --with-event-openssl --with-event-extra; \
-    make && make install; \
+    make && make install || exit 1; \
     cd -; \
   set +e; \
-  $(dpkg --compare-versions ${PHP_VERSION} lt 8.2) \
-  ; if [ "$?" -eq "0" ]; then \
-  pecl install --onlyreqdeps --nobuild mcrypt; \
-    cd "$(pecl config-get temp_dir)/mcrypt"; \
-    phpize; \
-    ./configure; \
-    make && make install; \
-    cd -; \
-  fi; \
+    if dpkg --compare-versions ${PHP_VERSION} lt 8.2; then \
+      pecl install --onlyreqdeps --nobuild mcrypt; \
+      cd "$(pecl config-get temp_dir)/mcrypt"; \
+      phpize; \
+      ./configure; \
+      make && make install || exit 1; \
+      cd -; \
+    fi; \
   set -e; \
   pecl install --onlyreqdeps --nobuild ast; \
     cd "$(pecl config-get temp_dir)/ast"; \
     phpize; \
     ./configure; \
-    make && make install; \
+    make && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild pcov; \
     cd "$(pecl config-get temp_dir)/pcov"; \
     phpize; \
     ./configure; \
-    make && make install; \
+    make && make install || exit 1; \
     cd -; \
-  pecl install --onlyreqdeps --nobuild openswoole; \
+  set +e; \
+    if dpkg --compare-versions ${PHP_VERSION} lt 8.1; then pecl install --onlyreqdeps --nobuild openswoole-4.12.1; \
+    elif dpkg --compare-versions ${PHP_VERSION} lt 8.3; then pecl install --onlyreqdeps --nobuild openswoole-22.0.0; \
+    else pecl install --onlyreqdeps --nobuild openswoole; \
+    fi; \
+  set -e; \
     cd "$(pecl config-get temp_dir)/openswoole"; \
     phpize; \
-    ./configure --enable-sockets --enable-openssl --enable-http2 --enable-hook-curl --enable-thread-context --enable-cares; \
-    make && make install; \
+    ./configure --enable-sockets --enable-openssl --enable-http2 --enable-thread-context --enable-cares; \
+    make && make install || exit 1; \
     cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-msgpack.ini msgpack; \
@@ -210,7 +230,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=private \
       | xargs -r apt-mark manual \
   ; \
   apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImport=false; \
-#  rm -rf /tmp/* ~/.pearrc /var/lib/apt/lists/* /var/cache/*; \
+  rm -rf /tmp/* ~/.pearrc /var/lib/apt/lists/* /var/cache/*; \
   php --version \
   ; mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini \
   ; sed -i "s|^expose_php\s*=\s*\(.*\)|expose_php=Off|g" $PHP_INI_DIR/php.ini \
@@ -225,7 +245,9 @@ RUN docker-php-ext-enable  \
     apcu \
     memcached \
     opcache \
+    pdo_sqlsrv \
     redis \
+    sqlsrv \
     xdebug \
     xhprof \
     ;
