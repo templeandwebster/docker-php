@@ -189,15 +189,10 @@ RUN set -eux; \
     ./configure; \
     make && make install || exit 1; \
     cd -; \
-  set +e; \
-    if dpkg --compare-versions ${PHP_VERSION} lt 8.1; then pecl install --onlyreqdeps --nobuild openswoole-4.12.1; \
-    elif dpkg --compare-versions ${PHP_VERSION} lt 8.3; then pecl install --onlyreqdeps --nobuild openswoole-22.0.0; \
-    else pecl install --onlyreqdeps --nobuild openswoole; \
-    fi; \
-  set -e; \
-    cd "$(pecl config-get temp_dir)/openswoole"; \
+  pecl install --onlyreqdeps --nobuild swoole; \
+    cd "$(pecl config-get temp_dir)/swoole"; \
     phpize; \
-    ./configure --enable-sockets --enable-openssl --enable-http2 --enable-thread-context --enable-cares; \
+    ./configure --enable-sockets --enable-openssl --enable-thread-context --enable-cares; \
     make && make install || exit 1; \
     cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
