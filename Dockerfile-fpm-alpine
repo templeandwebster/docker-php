@@ -232,9 +232,7 @@ RUN docker-php-ext-enable  \
     apcu \
     memcached \
     opcache \
-    pdo_sqlsrv \
     redis \
-    sqlsrv \
     xdebug \
     xhprof \
     ;
