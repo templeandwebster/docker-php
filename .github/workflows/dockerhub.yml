@@ -69,6 +69,7 @@ jobs:
   build-versions:
     needs: create-version-id
     strategy:
+      max-parallel: 10
       matrix:
         variant:
           - apache
