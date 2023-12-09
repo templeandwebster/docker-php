@@ -8,98 +8,38 @@ on:
   push:
     branches: [ master ]
   schedule:
-    - cron: 0 0 * * 1,4
+    - cron: 0 2 * * 2,6
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build-versions:
-    runs-on: ubuntu-latest
-    outputs:
-      sha: ${{ steps.short-sha.outputs.sha }}
-      date: ${{ steps.date.outputs.date }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: benjlevesque/short-sha@v2.2
-        id: short-sha
-        with:
-          length: 6
-      - name: Get current date
-        id: date
-        run: echo "date=$(date -u +'%Y%m%d')" >> $GITHUB_OUTPUT
-
-  latest:
-    needs: [build-versions, php-debian, php-alpine]
     strategy:
+      max-parallel: 10
       matrix:
-        variant: [fpm, cli, apache, zts, fpm-alpine, cli-alpine, zts-alpine]
-        version: ['8.3']
-        latest: ['8']
+        version:
+          - '8.1'
+          - '8.2'
+          - '8.3'
+        variant:
+          - apache
+          - cli
+          - cli-alpine
+          - fpm
+          - fpm-alpine
+          - zts
+          - zts-alpine
     uses: ./.github/workflows/build.yml
     secrets: inherit
     with:
       version: ${{ matrix.version }}
       variant: ${{ matrix.variant }}
-      tags: |
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.variant }}
-        ${{ github.repository_owner }}/php:${{ matrix.variant }}
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant}}-${{ needs.build-versions.outputs.sha }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.sha }}
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant}}-${{ needs.build-versions.outputs.sha }}
-        ${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.sha }}
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant }}
-        ${{ github.repository_owner }}/php:${{ matrix.latest }}-${{ matrix.variant }}
-
-  php-debian:
-    needs: build-versions
-    strategy:
-      max-parallel: 4
-      matrix:
-        variant: [fpm, cli, apache, zts]
-        version: ['8.3', '8.2', '8.1']
-    uses: ./.github/workflows/build.yml
-    secrets: inherit
-    with:
-      version: ${{ matrix.version }}
-      variant: ${{ matrix.variant }}
-      tags: |
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant}}-${{ needs.build-versions.outputs.sha }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.sha }}
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
-
-  php-alpine:
-    needs: build-versions
-    strategy:
-      max-parallel: 4
-      matrix:
-        variant: [fpm-alpine, cli-alpine, zts-alpine]
-        version: ['8.3', '8.2', '8.1']
-    uses: ./.github/workflows/build.yml
-    secrets: inherit
-    with:
-      version: ${{ matrix.version }}
-      variant: ${{ matrix.variant }}
-      tags: |
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.date }}
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant}}-${{ needs.build-versions.outputs.sha }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}-${{ needs.build-versions.outputs.sha }}
-        ghcr.io/${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
-        ${{ github.repository_owner }}/php:${{ matrix.version }}-${{ matrix.variant }}
+      latest: '8.3'
 
   clear-cache:
     runs-on: ubuntu-latest
-    needs: ['latest']
+    needs: ['build-versions']
     steps:
       - name: Clear cache
         uses: actions/github-script@v7
@@ -124,7 +64,7 @@ jobs:
                   cache_id: cache.id,
                 })
               }
-              //sleep 30 seconds before iterating again, to combat ratelimitting
+              //sleep 30 seconds before iterating again, to combat rate limiting
               await sleep(30000)
             } while(caches?.data?.actions_caches?.length > 0)
             console.log("Clear completed")
