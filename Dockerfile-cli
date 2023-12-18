@@ -5,8 +5,7 @@ LABEL org.opencontainers.image.description="PHP base image with commonly used ex
      "com.koalaphils.image.author"="mdprotacio@outlook.com"
 
 RUN set -eux; \
-  sed 's@deb.debian.org@cdn-fastly.deb.debian.org@' -i /etc/apt/sources.list.d/debian.sources \
-  && apt-get update \
+  apt-get update \
   && LIBAVIF=`apt-cache pkgnames libavif | sort -V | head -1` \
   && LIBEVENTEXTRA=`apt-cache pkgnames libevent-extra | sort -V | head -1` \
   && LIBEVENTOPENSSL=`apt-cache pkgnames libevent-openssl | sort -V | head -1` \
@@ -203,7 +202,7 @@ RUN set -eux; \
   pecl install --onlyreqdeps --nobuild swoole; \
     cd "$(pecl config-get temp_dir)/swoole"; \
     phpize; \
-    ./configure --enable-sockets --enable-openssl --enable-thread-context --enable-cares; \
+    ./configure --enable-openssl --enable-swoole-curl --enable-cares --enable-swoole-coro-time; \
     make && make install || exit 1; \
     cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \

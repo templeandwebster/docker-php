@@ -191,7 +191,7 @@ RUN set -eux; \
 #  pecl install --onlyreqdeps --nobuild swoole; \
 #    cd "$(pecl config-get temp_dir)/swoole"; \
 #    phpize; \
-#    ./configure --enable-sockets --enable-openssl --enable-thread-context --enable-cares; \
+#    ./configure --enable-openssl --enable-swoole-curl --enable-cares --enable-swoole-coro-time --enable-thread-context; \
 #    make && make install || exit 1; \
 #    cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
