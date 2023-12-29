@@ -11,7 +11,7 @@ RUN set -eux; \
     c-ares \
     freetype \
     git \
-    imagemagick \
+    imagemagick-libs \
     libavif \
     libcmph \
     libedit \
@@ -64,13 +64,8 @@ RUN set -eux; \
     zlib-dev \
     ${PHP_EXTRA_BUILD_DEPS:-} \
   ; export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
-  ; set +e \
-  ; if dpkg --compare-versions ${PHP_VERSION} ge 8.1; then WITH_AVIF=--with-avif; else WITH_AVIF=; fi \
-  ; if dpkg --compare-versions ${PHP_VERSION} ge 7.4; then WITH_PARAMS="--with-jpeg --with-xpm --with-webp --with-freetype ${WITH_AVIF}"; \
-    else WITH_PARAMS="--with-jpeg-dir=/usr/include --with-png-dir=/usr/include --with-webp-dir=/usr/include --with-freetype-dir=/usr/include --with-xpm-dir=/usr/include"; fi \
-  ; set -e \
   ; \
-  docker-php-ext-configure gd ${WITH_PARAMS} \
+  docker-php-ext-configure gd --with-jpeg --with-xpm --with-webp --with-freetype --with-avif \
     ; \
   docker-php-ext-install -j$(nproc) gd \
     ; \
@@ -166,16 +161,12 @@ RUN set -eux; \
     ./configure --with-event-core --enable-event-sockets --with-event-openssl --with-event-extra; \
     make && make install || exit 1; \
     cd -; \
-  set +e; \
-    if dpkg --compare-versions ${PHP_VERSION} lt 8.3; then \
-      pecl install --onlyreqdeps --nobuild mcrypt; \
-      cd "$(pecl config-get temp_dir)/mcrypt"; \
-      phpize; \
-      ./configure; \
-      make && make install || exit 1; \
-      cd -; \
-    fi; \
-  set -e; \
+  pecl install --onlyreqdeps --nobuild mcrypt; \
+    cd "$(pecl config-get temp_dir)/mcrypt"; \
+    phpize; \
+    ./configure; \
+    make && make install || exit 1; \
+    cd -; \
   pecl install --onlyreqdeps --nobuild ast; \
     cd "$(pecl config-get temp_dir)/ast"; \
     phpize; \
