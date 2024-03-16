@@ -29,6 +29,7 @@ RUN set -eux; \
     libmcrypt4 \
     libmsgpackc2 \
     libpng16-16 \
+    libpcre3 \
     libsodium23 \
     libxpm4 \
     libzip4 \
@@ -43,6 +44,7 @@ RUN set -eux; \
   savedAptMark="$(apt-mark showmanual)"; \
   apt-get install -y --no-install-recommends \
     $PHPIZE_DEPS \
+    build-essential \
     gettext-base \
     libargon2-dev \
     libavif-dev \
@@ -62,6 +64,7 @@ RUN set -eux; \
     libmemcached-dev \
     libmsgpack-dev \
     libonig-dev \
+    libpcre3-dev \
     libpng-dev \
     libpng++-dev \
     libsodium-dev \
@@ -193,7 +196,7 @@ RUN set -eux; \
 #  pecl install --onlyreqdeps --nobuild swoole; \
 #    cd "$(pecl config-get temp_dir)/swoole"; \
 #    phpize; \
-#    ./configure --enable-openssl --enable-swoole-curl --enable-cares --enable-swoole-coro-time --enable-thread-context; \
+#    ./configure --enable-openssl --enable-cares --enable-swoole-coro-time --enable-thread-context; \
 #    make && make install || exit 1; \
 #    cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
