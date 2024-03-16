@@ -19,17 +19,17 @@ jobs:
       max-parallel: 10
       matrix:
         version:
-          - '8.1'
-          - '8.2'
           - '8.3'
+          - '8.2'
+          - '8.1'
         variant:
-          - apache
-          - cli
           - cli-alpine
-          - fpm
           - fpm-alpine
-          - zts
           - zts-alpine
+          - cli
+          - fpm
+          - zts
+          - apache
     uses: ./.github/workflows/build.yml
     secrets: inherit
     with:
