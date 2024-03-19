@@ -27,6 +27,7 @@ RUN set -eux; \
     lz4-libs \
     msgpack-c \
     netcat-openbsd \
+    pcre \
     tzdata \
     unixodbc \
     unzip \
@@ -34,6 +35,7 @@ RUN set -eux; \
   ; \
   apk add --no-cache --virtual .build-deps \
     $PHPIZE_DEPS \
+    build-base \
     argon2-dev \
     c-ares-dev \
     curl-dev \
@@ -60,6 +62,7 @@ RUN set -eux; \
     msgpack-c-dev \
     oniguruma-dev \
     openssl-dev \
+    pcre-dev \
     unixodbc-dev \
     zlib-dev \
     ${PHP_EXTRA_BUILD_DEPS:-} \
@@ -95,19 +98,19 @@ RUN set -eux; \
     cd "$(pecl config-get temp_dir)/apcu"; \
     phpize; \
     ./configure --enable-apcu; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild igbinary; \
     cd "$(pecl config-get temp_dir)/igbinary"; \
     phpize; \
     ./configure; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild msgpack; \
     cd "$(pecl config-get temp_dir)/msgpack"; \
     phpize; \
     ./configure; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   set +e; \
   if dpkg --compare-versions ${PHP_VERSION} lt 8.3; then \
@@ -115,19 +118,19 @@ RUN set -eux; \
     cd "$(pecl config-get temp_dir)/imagick"; \
     phpize; \
     ./configure; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild sqlsrv; \
     cd "$(pecl config-get temp_dir)/sqlsrv"; \
     phpize; \
     ./configure; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild pdo_sqlsrv; \
     cd "$(pecl config-get temp_dir)/pdo_sqlsrv"; \
     phpize; \
     ./configure; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   fi; \
   set -e; \
@@ -135,55 +138,55 @@ RUN set -eux; \
     cd "$(pecl config-get temp_dir)/redis"; \
     phpize; \
     ./configure --enable-redis-igbinary --enable-redis-json --enable-redis-msgpack --enable-redis-lz4 --with-liblz4=/usr/include; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild memcached; \
     cd "$(pecl config-get temp_dir)/memcached"; \
     phpize; \
     ./configure --enable-memcached-igbinary --enable-memcached-json --enable-memcached-session --enable-memcached-sasl --enable-memcached-msgpack; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild xhprof; \
     cd "$(pecl config-get temp_dir)/xhprof/extension"; \
     phpize; \
     ./configure; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild xdebug; \
     cd "$(pecl config-get temp_dir)/xdebug"; \
     phpize; \
     ./configure; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild event; \
     cd "$(pecl config-get temp_dir)/event"; \
     phpize; \
     ./configure --with-event-core --enable-event-sockets --with-event-openssl --with-event-extra; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild mcrypt; \
     cd "$(pecl config-get temp_dir)/mcrypt"; \
     phpize; \
     ./configure; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild ast; \
     cd "$(pecl config-get temp_dir)/ast"; \
     phpize; \
     ./configure; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
   pecl install --onlyreqdeps --nobuild pcov; \
     cd "$(pecl config-get temp_dir)/pcov"; \
     phpize; \
     ./configure; \
-    make && make install || exit 1; \
+    make && make test && make install || exit 1; \
     cd -; \
 #  pecl install --onlyreqdeps --nobuild swoole; \
 #    cd "$(pecl config-get temp_dir)/swoole"; \
 #    phpize; \
-#    ./configure --enable-openssl --enable-swoole-curl --enable-cares --enable-swoole-coro-time --enable-thread-context; \
-#    make && make install || exit 1; \
+#    ./configure; \
+#    make && make test && make install || exit 1; \
 #    cd -; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
   docker-php-ext-enable --ini-name 0-docker-php-ext-msgpack.ini msgpack; \
