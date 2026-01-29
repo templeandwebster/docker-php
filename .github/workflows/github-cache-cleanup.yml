@@ -1,0 +1,126 @@
+name: Purge All GitHub Caches
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  purge-cache:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Verify GH CLI
+        run: |
+          set -euo pipefail
+          if ! command -v gh >/dev/null 2>&1; then
+            echo "gh CLI not found. Installing..."
+            curl -fsSL https://github.com/cli/cli/releases/latest/download/gh_$(uname -s)_amd64.tar.gz -o /tmp/gh.tar.gz
+            tar -xzf /tmp/gh.tar.gz -C /tmp
+            sudo /tmp/gh_*/bin/gh --version || true
+          fi
+          gh --version
+
+      - name: Purge all caches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "========================================="
+          echo "🗑️  Purging All GitHub Caches"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Started at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "========================================="
+          
+          TOTAL_DELETED=0
+          TOTAL_FAILED=0
+          ITERATION=1
+          MAX_ITERATIONS=50
+          
+          # Helper: delete single cache id with retries
+          delete_cache() {
+            local id="$1"
+            local attempt=1
+            local max_attempts=3
+            while [ "$attempt" -le "$max_attempts" ]; do
+              if gh api --method DELETE "repos/$GITHUB_REPOSITORY/actions/caches/$id" --silent >/dev/null 2>&1; then
+                return 0
+              fi
+              sleep $((attempt * 2))
+              attempt=$((attempt + 1))
+            done
+            return 1
+          }
+          
+          while true; do
+            echo "-----------------------------------------"
+            echo "🔄 Iteration $ITERATION"
+            echo "-----------------------------------------"
+          
+            # Fetch all cache ids using pagination; output one id per line
+            if ! OUTPUT=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/caches" --jq '.actions_caches[].id' 2>&1); then
+              echo "❌ Failed to list caches"
+              echo "Output: $OUTPUT"
+              exit 1
+            fi
+          
+            # Read into array safely
+            mapfile -t CACHE_IDS < <(printf '%s\n' "$OUTPUT")
+          
+            # Trim and filter empties
+            FILTERED=()
+            for id in "${CACHE_IDS[@]}"; do
+              id_trimmed="$(printf '%s' "$id" | tr -d '[:space:]')"
+              if [ -n "$id_trimmed" ]; then
+                FILTERED+=("$id_trimmed")
+              fi
+            done
+            CACHE_IDS=("${FILTERED[@]}")
+          
+            if [ ${#CACHE_IDS[@]} -eq 0 ]; then
+              echo "No more caches found. Done!"
+              break
+            fi
+          
+            echo "Found ${#CACHE_IDS[@]} cache(s) to delete"
+            echo ""
+          
+            COUNTER=0
+            for cache_id in "${CACHE_IDS[@]}"; do
+              COUNTER=$((COUNTER+1))
+              echo "[$COUNTER/${#CACHE_IDS[@]}] Deleting cache ID: $cache_id"
+              if delete_cache "$cache_id"; then
+                echo "  ✅ Deleted $cache_id"
+                TOTAL_DELETED=$((TOTAL_DELETED+1))
+              else
+                echo "  ❌ Failed to delete $cache_id"
+                TOTAL_FAILED=$((TOTAL_FAILED+1))
+              fi
+            done
+          
+            echo ""
+            echo "Iteration $ITERATION summary: deleted $COUNTER this pass"
+            echo "Total deleted so far: $TOTAL_DELETED"
+            echo "Total failed so far: $TOTAL_FAILED"
+            echo ""
+          
+            ITERATION=$((ITERATION+1))
+            if [ "$ITERATION" -gt "$MAX_ITERATIONS" ]; then
+              echo "⚠️  Reached max iterations ($MAX_ITERATIONS). Stopping."
+              break
+            fi
+          
+            # Small pause to avoid hitting rate limits
+            sleep 1
+          done
+          
+          echo ""
+          echo "========================================="
+          echo "✅ Purge Completed!"
+          echo "Ended at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "Total deleted: $TOTAL_DELETED"
+          echo "Total failed: $TOTAL_FAILED"
+          echo "========================================="
