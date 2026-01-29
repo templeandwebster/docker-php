@@ -36,6 +36,7 @@ jobs:
           - '8.4.17'
           - '8.3.30'
           - '8.2.30'
+          - '8.1.34'
         variant:
           - cli-alpine
           - zts-alpine
@@ -53,6 +54,7 @@ jobs:
       max-parallel: 14
       matrix:
         version:
+          - '8.1.34'
           - '8.2.30'
           - '8.3.30'
           - '8.4.17'
