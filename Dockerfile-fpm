@@ -69,5 +69,13 @@ RUN set -eux \
     ; sed -i "s/;process_control_timeout\s*=\s*.*/process_control_timeout = 10s/g" $PHP_INI_DIR/../php-fpm.conf \
     ;
 
+RUN docker-php-ext-enable  \
+    apcu \
+    memcached \
+    redis \
+    xdebug \
+    xhprof \
+    ;
+
 WORKDIR /var/www/html
 CMD ["php-fpm"]

@@ -57,5 +57,13 @@ RUN set -eux \
     ; sed -i "s|^\(;\)*realpath_cache_ttl\s*=\s*\(.*\)|realpath_cache_ttl=\2|g" $PHP_INI_DIR/php.ini \
     ;
 
+RUN docker-php-ext-enable  \
+    apcu \
+    memcached \
+    redis \
+    xdebug \
+    xhprof \
+    ;
+
 WORKDIR /var/www/html
 CMD ["php", "-a"]

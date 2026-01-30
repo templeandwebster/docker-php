@@ -78,5 +78,13 @@ RUN set -eux \
     ; a2enconf log_combined \
     ;
 
+RUN docker-php-ext-enable  \
+    apcu \
+    memcached \
+    redis \
+    xdebug \
+    xhprof \
+    ;
+
 WORKDIR /var/www/html
 
