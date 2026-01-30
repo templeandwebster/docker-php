@@ -1,224 +1,72 @@
+# syntax=docker/dockerfile:1.4
 ARG PHP_VERSION=8
-FROM php:${PHP_VERSION}-fpm-alpine
-LABEL org.opencontainers.image.description="PHP base image with commonly used extensions pre-installed" \
-     "com.koalaphils.vendor"="Koala Software Technology Innovations" \
-     "com.koalaphils.image.author"="mdprotacio@outlook.com"
+FROM php-${PHP_VERSION}-cli-alpine AS builder
 
+FROM php:${PHP_VERSION}-fpm-alpine
+# Add dependencies for PIE
+ENV PHPIZE_DEPS="${PHPIZE_DEPS} autoconf automake build-base gcc git libtool m4 make"
+# Copy PIE and Composer binaries
+COPY --link --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
+COPY --link --from=composer/composer /usr/bin/composer /usr/local/bin/composer
+COPY --from=builder /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
+
+# Install dependencies
 RUN set -eux; \
-  apk update \
-  && apk add --no-cache \
-    bash \
-    c-ares \
-    freetype \
-    git \
-    imagemagick-libs \
-    libavif \
-    libcmph \
-    libedit \
-    libevent \
-    libjpeg-turbo \
-    libmcrypt \
-    libmemcached \
-    libmemcached-libs \
-    libpng \
-    libsodium \
-    libxpm \
-    libzip \
-    lz4-libs \
-    msgpack-c \
-    netcat-openbsd \
-    pcre \
-    tzdata \
-    unixodbc \
-    unzip \
-    zlib \
-  ; \
-  apk add --no-cache --virtual .build-deps \
-    $PHPIZE_DEPS \
-    build-base \
-    argon2-dev \
-    c-ares-dev \
-    curl-dev \
-    cyrus-sasl-dev \
-    freetype-dev \
-    gettext-dev \
-    icu-dev \
-    imagemagick-dev \
-    jpeg-dev \
-    libavif-dev \
-    libedit-dev \
-    libevent-dev \
-    libjpeg-turbo-dev \
-    libmcrypt-dev \
-    libmemcached-dev \
-    linux-headers \
-    libpng-dev \
-    libsodium-dev \
-    libwebp-dev \
-    libxml2-dev \
-    libxpm-dev \
-    libzip-dev \
-    lz4-dev \
-    msgpack-c-dev \
-    oniguruma-dev \
-    openssl-dev \
-    pcre-dev \
-    unixodbc-dev \
-    zlib-dev \
-    ${PHP_EXTRA_BUILD_DEPS:-} \
-  ; export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
-  ; \
-  docker-php-ext-configure gd --with-jpeg --with-xpm --with-webp --with-freetype --with-avif \
-    ; \
-  docker-php-ext-install -j$(nproc) gd \
-    ; \
-  docker-php-ext-install -j$(nproc) \
-    bcmath \
-    dba \
-    gettext \
-    intl \
-    mysqli \
-    opcache \
-    pcntl \
-    pdo_mysql \
-    xml \
-    zip \
-    ; \
-  rm -rf $PHP_INI_DIR/conf.d/docker-php-ext-*.ini \
-    ; \
-  docker-php-ext-enable sodium \
-    ; \
-  docker-php-ext-install -j$(nproc) \
-    --ini-name 0-docker-php-ext-sockets.ini \
-    sockets \
-    ; \
-  pecl update-channels \
-    ; \
-  pecl install --onlyreqdeps --nobuild apcu; \
-    cd "$(pecl config-get temp_dir)/apcu"; \
-    phpize; \
-    ./configure --enable-apcu; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild igbinary; \
-    cd "$(pecl config-get temp_dir)/igbinary"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild msgpack; \
-    cd "$(pecl config-get temp_dir)/msgpack"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  set +e; \
-  if dpkg --compare-versions ${PHP_VERSION} lt 8.3; then \
-  pecl install --onlyreqdeps --nobuild imagick; \
-    cd "$(pecl config-get temp_dir)/imagick"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild sqlsrv; \
-    cd "$(pecl config-get temp_dir)/sqlsrv"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild pdo_sqlsrv; \
-    cd "$(pecl config-get temp_dir)/pdo_sqlsrv"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  fi; \
-  set -e; \
-  pecl install --onlyreqdeps --nobuild redis; \
-    cd "$(pecl config-get temp_dir)/redis"; \
-    phpize; \
-    ./configure --enable-redis-igbinary --enable-redis-json --enable-redis-msgpack --enable-redis-lz4 --with-liblz4=/usr/include; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild memcached; \
-    cd "$(pecl config-get temp_dir)/memcached"; \
-    phpize; \
-    ./configure --enable-memcached-igbinary --enable-memcached-json --enable-memcached-session --enable-memcached-sasl --enable-memcached-msgpack; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild xhprof; \
-    cd "$(pecl config-get temp_dir)/xhprof/extension"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild xdebug; \
-    cd "$(pecl config-get temp_dir)/xdebug"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild event; \
-    cd "$(pecl config-get temp_dir)/event"; \
-    phpize; \
-    ./configure --with-event-core --enable-event-sockets --with-event-openssl --with-event-extra; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild mcrypt; \
-    cd "$(pecl config-get temp_dir)/mcrypt"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild ast; \
-    cd "$(pecl config-get temp_dir)/ast"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild pcov; \
-    cd "$(pecl config-get temp_dir)/pcov"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  pecl install --onlyreqdeps --nobuild swoole; \
-    cd "$(pecl config-get temp_dir)/swoole"; \
-    phpize; \
-    ./configure; \
-    make && make test && make install || exit 1; \
-    cd -; \
-  docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary; \
-  docker-php-ext-enable --ini-name 0-docker-php-ext-msgpack.ini msgpack; \
-  cp /usr/bin/envsubst /usr/local/bin/envsubst; \
-  runDeps="$( \
-      scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
-          | tr ',' '\n' \
-          | sort -u \
-          | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
-  )"; \
-  apk add --no-cache $runDeps; \
-  \
-  apk del --no-network .build-deps; \
-  rm -rf /tmp/* ~/.pearrc; \
-  php --version \
-  ; mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini \
-  ; sed -i "s|^expose_php\s*=\s*\(.*\)|expose_php=Off|g" $PHP_INI_DIR/php.ini \
-  ; sed -i "s|^\(;\)*realpath_cache_size\s*=\s*\(.*\)|realpath_cache_size=\2|g" $PHP_INI_DIR/php.ini \
-  ; sed -i "s|^\(;\)*realpath_cache_ttl\s*=\s*\(.*\)|realpath_cache_ttl=\2|g" $PHP_INI_DIR/php.ini \
-  ; sed -i "s/;emergency_restart_threshold\s*=\s*.*/emergency_restart_threshold = 10/g" $PHP_INI_DIR/../php-fpm.conf \
-  ; sed -i "s/;emergency_restart_interval\s*=\s*.*/emergency_restart_interval = 1m/g" $PHP_INI_DIR/../php-fpm.conf \
-  ; sed -i "s/;process_control_timeout\s*=\s*.*/process_control_timeout = 10s/g" $PHP_INI_DIR/../php-fpm.conf \
-  ;
+    apk update && \
+    apk add --no-cache \
+# Add helper tools for development \
+        curl \
+        gettext \
+        netcat-openbsd \
+        wget \
+# Add SSL support \
+        ca-certificates \
+        gnupg \
+        openssl \
+# PHP extension dependencies \
+        c-ares \
+        freetype \
+        icu-libs \
+        imagemagick \
+        imagemagick-libs \
+        libavif \
+        libcurl \
+        libjpeg-turbo \
+        libmcrypt \
+        libmemcached-libs \
+        libpng \
+        libwebp \
+        libxslt \
+        libzip \
+        mongo-c-driver \
+        msgpack-c \
+        musl \
+        rabbitmq-c \
+        sqlite-libs \
+        unixodbc \
+        zlib \
+    ;
+
+RUN set -eux \
+    ; update-ca-certificates \
+    ; docker-php-ext-enable --ini-name 0-docker-php-ext-igbinary.ini igbinary \
+    ; docker-php-ext-enable --ini-name 0-docker-php-ext-msgpack.ini msgpack \
+    ; cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini \
+    ; sed -i "s|^expose_php\s*=\s*\(.*\)|expose_php=Off|g" $PHP_INI_DIR/php.ini \
+    ; sed -i "s|^\(;\)*realpath_cache_size\s*=\s*\(.*\)|realpath_cache_size=\2|g" $PHP_INI_DIR/php.ini \
+    ; sed -i "s|^\(;\)*realpath_cache_ttl\s*=\s*\(.*\)|realpath_cache_ttl=\2|g" $PHP_INI_DIR/php.ini \
+    ; sed -i "s/;emergency_restart_threshold\s*=\s*.*/emergency_restart_threshold = 10/g" $PHP_INI_DIR/../php-fpm.conf \
+    ; sed -i "s/;emergency_restart_interval\s*=\s*.*/emergency_restart_interval = 1m/g" $PHP_INI_DIR/../php-fpm.conf \
+    ; sed -i "s/;process_control_timeout\s*=\s*.*/process_control_timeout = 10s/g" $PHP_INI_DIR/../php-fpm.conf \
+    ;
+
 RUN docker-php-ext-enable  \
     apcu \
     memcached \
-    opcache \
     redis \
     xdebug \
     xhprof \
     ;
-COPY --from=composer/composer /usr/bin/composer /usr/local/bin/composer
-RUN composer config --global use-github-api false
+
 WORKDIR /var/www/html
 CMD ["php-fpm"]
