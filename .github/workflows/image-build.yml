@@ -56,7 +56,6 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.base.name=docker.io/library/php:${{ inputs.version }}-${{ inputs.variant }}
             org.opencontainers.image.licenses=GNU GPLv3
-            org.opencontainers.image.authors=Melvin D. Protacio <mdprotacio@outlook.com>
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
