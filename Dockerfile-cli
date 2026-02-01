@@ -29,6 +29,7 @@ RUN set -eux; \
 # Add helper tools for development \
         curl \
         gettext-base \
+        git \
         locales \
         netcat-traditional \
         wget \

@@ -17,6 +17,7 @@ RUN set -eux; \
 # Add helper tools for development \
         curl \
         gettext \
+        git \
         netcat-openbsd \
         wget \
 # Add SSL support \
