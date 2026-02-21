@@ -1,5 +1,9 @@
 ARG PHP_VERSION=8
-FROM php:${PHP_VERSION}-cli AS builder
+ARG PHP_VARIANT=cli
+ARG BASE_IMAGE_REGISTRY=public.ecr.aws
+ARG BASE_IMAGE_PATH=docker/library
+FROM ${BASE_IMAGE_REGISTRY}/${BASE_IMAGE_PATH}/composer:latest AS composer
+FROM ${BASE_IMAGE_REGISTRY}/${BASE_IMAGE_PATH}/php:${PHP_VERSION}-${PHP_VARIANT} AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Dependencies for building PHP extensions
@@ -8,8 +12,8 @@ ENV PHPIZE_DEPS="${PHPIZE_DEPS} autoconf automake build-essential gcc git libtoo
 
 # Copy PIE and Composer binaries
 ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV COMPOSER_PROCESS_TIMEOUT=0
-COPY --link --from=composer/composer /usr/bin/composer /usr/local/bin/composer
+ENV COMPOSER_PROCESS_TIMEOUT=6000
+COPY --link --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY --link --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
 
 # Replace http package sources with https
@@ -25,6 +29,7 @@ RUN sed -i 's|http://|https://|g' /etc/apt/sources.list.d/* \
 # Install PHP extension build dependencies
 RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN set -eux; \
     PHP_VERSION_ID="$(php -r 'echo PHP_VERSION_ID;')"; \
+    PHP_ZTS="$(php -r 'echo PHP_ZTS;')"; \
     composer config --global github-oauth.github.com $GITHUB_TOKEN; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update && \
@@ -121,6 +126,7 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN set -eux; \
     pie install --skip-enable-extension osmanov/pecl-ev  && \
     pie install --skip-enable-extension php-amqp/php-amqp && \
     pie install --skip-enable-extension pecl/mcrypt  && \
+    if [ "$PHP_ZTS" -eq 1 ]; then pie install --skip-enable-extension pecl/parallel; fi && \
     pie install --skip-enable-extension pecl/pcov  && \
     pie install --skip-enable-extension pecl/timezonedb  && \
     pie install --skip-enable-extension pecl/zip  && \
@@ -128,7 +134,7 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN set -eux; \
     pie install --skip-enable-extension phpredis/phpredis --enable-redis-igbinary --enable-redis-msgpack  && \
     pie install --skip-enable-extension supermetrics/jsonpath && \
     pie install --skip-enable-extension swoole/swoole$( [ "$PHP_VERSION_ID" -ge 80500 ] && echo :dev-master ) && \
-    pie install --skip-enable-extension xdebug/xdebug  && \
+    pie install --skip-enable-extension xdebug/xdebug && \
     docker-php-ext-enable  \
       amqp \
       apcu \
@@ -139,6 +145,7 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN set -eux; \
       mcrypt \
       memcached \
       mongodb \
+      $( [ "$PHP_ZTS" -eq 1 ] && echo parallel ) \
       pcov \
       redis \
       swoole \
