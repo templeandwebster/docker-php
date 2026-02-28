@@ -63,6 +63,14 @@ RUN set -eux \
     ; sed -i "s|^\(;\)*realpath_cache_size\s*=\s*\(.*\)|realpath_cache_size=\2|g" $PHP_INI_DIR/php.ini \
     ; sed -i "s|^\(;\)*realpath_cache_ttl\s*=\s*\(.*\)|realpath_cache_ttl=\2|g" $PHP_INI_DIR/php.ini
 
+RUN docker-php-ext-enable  \
+    apcu \
+    memcached \
+    redis \
+    xdebug \
+    xhprof \
+    ;
+
 WORKDIR /var/www/html
 
 FROM runtime as cli
@@ -74,19 +82,6 @@ RUN set -eux \
     ; sed -i "s/;emergency_restart_interval\s*=\s*.*/emergency_restart_interval = 1m/g" $PHP_INI_DIR/../php-fpm.conf \
     ; sed -i "s/;process_control_timeout\s*=\s*.*/process_control_timeout = 10s/g" $PHP_INI_DIR/../php-fpm.conf \
     ;
-<<<<<<< HEAD:Dockerfile-fpm-alpine
-
-RUN docker-php-ext-enable  \
-    apcu \
-    memcached \
-    redis \
-    xdebug \
-    xhprof \
-    ;
-
-WORKDIR /var/www/html
-=======
->>>>>>> origin/master:builder/alpine/Dockerfile-image
 CMD ["php-fpm"]
 
 FROM runtime as zts
