@@ -62,12 +62,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Compute scope hash for this combo
-        id: compute_hash
-        run: |
-          # This step only echoes the expression into an output, evaluated by Actions
-          # Use the same hashFiles() pattern you used in your build step.
-          echo "scope_hash=${{ hashFiles('builder/**/Dockerfile*') }}" >> $GITHUB_OUTPUT
       - name: Build PHP ${{ inputs.version }} ${{ steps.compute_variants.outputs.variant }} (prebuild)
         id: build
         uses: docker/build-push-action@v6
@@ -87,8 +81,8 @@ jobs:
           provenance: mode=max
           sbom: true
           push: true
-          cache-from: ${{ github.run_attempt == 1 && format('type=registry,ref=ghcr.io/{0}/cache/php:{1}-{2}-{3}', github.repository_owner, inputs.version, steps.compute_variants.outputs.variant, steps.compute_hash.outputs.scope_hash) || '' }}
-          cache-to: type=registry,mode=max,ref=${{ format('ghcr.io/{0}/cache/php:{1}-{2}-{3}', github.repository_owner, inputs.version, steps.compute_variants.outputs.variant, steps.compute_hash.outputs.scope_hash) }}
+          cache-from: ${{ github.run_attempt == 1 && format('type=registry,ref=ghcr.io/{0}/cache/php:{1}-{2}', github.repository_owner, inputs.version, steps.compute_variants.outputs.variant) || '' }}
+          cache-to: type=registry,mode=max,ref=${{ format('ghcr.io/{0}/cache/php:{1}-{2}', github.repository_owner, inputs.version, steps.compute_variants.outputs.variant) }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}

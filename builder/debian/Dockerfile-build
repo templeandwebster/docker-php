@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 ARG PHP_VERSION=8
 ARG PHP_VARIANT=cli
 ARG BASE_IMAGE_REGISTRY=public.ecr.aws
@@ -17,7 +18,8 @@ COPY --link --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY --link --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
 
 # Replace http package sources with https
-RUN sed -i 's|http://|https://|g' /etc/apt/sources.list.d/* \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    sed -i 's|http://|https://|g' /etc/apt/sources.list.d/* \
     && apt-get clean \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -27,7 +29,9 @@ RUN sed -i 's|http://|https://|g' /etc/apt/sources.list.d/* \
     && update-ca-certificates
 
 # Install PHP extension build dependencies
-RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN set -eux; \
+RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    set -eux; \
     composer config --global github-oauth.github.com $GITHUB_TOKEN; \
     apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -56,7 +60,8 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN set -eux; \
         `apt-cache pkgnames zlib | grep dev | sort -V | head -1` \
     ;
 
-RUN set -eux; \
+RUN --mount=type=cache,target=/tmp/pear,sharing=locked \
+    set -eux; \
     export \
 		CFLAGS="$PHP_CFLAGS" \
 		CPPFLAGS="$PHP_CPPFLAGS" \
@@ -136,7 +141,8 @@ RUN set -eux; \
     pie install --skip-enable-extension swoole/swoole && \
     pie install --skip-enable-extension xdebug/xdebug
 
-RUN docker-php-ext-enable  \
+RUN PHP_ZTS="$(php -r 'echo PHP_ZTS;')"; \
+    docker-php-ext-enable  \
       amqp \
       apcu \
       ast \
