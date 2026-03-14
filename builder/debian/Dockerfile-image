@@ -15,6 +15,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 COPY --link --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
 COPY --link --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY --link --from=builder /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
+COPY --link --from=builder /root/.pie/ /root/.pie/
 
 # Replace http package sources with https
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
