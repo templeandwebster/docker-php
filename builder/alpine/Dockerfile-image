@@ -67,10 +67,26 @@ RUN set -eux \
 
 RUN docker-php-ext-enable  \
     apcu \
+    amqp \
+    ast \
+    bcmath \
+    dba \
+    ev \
+    imagick \
+    intl \
+    mcrypt \
     memcached \
+    mongodb \
+    pcntl \
+    pcov \
+    pdo \
+    pdo_sqlsrv \
     redis \
+    sqlsrv \
     xdebug \
     xhprof \
+    xsl \
+    zip \
     ;
 
 WORKDIR /var/www/html
