@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 ARG PHP_VERSION=8
 ARG PHP_VARIANT=cli
 ARG BASE_IMAGE_REGISTRY=public.ecr.aws
@@ -17,7 +18,8 @@ COPY --link --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY --link --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
 
 # Replace http package sources with https
-RUN sed -i 's|http://|https://|g' /etc/apt/sources.list.d/* \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    sed -i 's|http://|https://|g' /etc/apt/sources.list.d/* \
     && apt-get clean \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -27,11 +29,10 @@ RUN sed -i 's|http://|https://|g' /etc/apt/sources.list.d/* \
     && update-ca-certificates
 
 # Install PHP extension build dependencies
-RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN set -eux; \
-    PHP_VERSION_ID="$(php -r 'echo PHP_VERSION_ID;')"; \
-    PHP_ZTS="$(php -r 'echo PHP_ZTS;')"; \
+RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    set -eux; \
     composer config --global github-oauth.github.com $GITHUB_TOKEN; \
-    savedAptMark="$(apt-mark showmanual)"; \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         $PHPIZE_DEPS \
@@ -57,11 +58,17 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN set -eux; \
         `apt-cache pkgnames libcurl4 | grep dev | grep openssl | sort -V` \
         `apt-cache pkgnames unixodbc | grep dev | sort -V | head -1` \
         `apt-cache pkgnames zlib | grep dev | sort -V | head -1` \
-    ; export \
+    ;
+
+RUN --mount=type=cache,target=/tmp/pear,sharing=locked \
+    set -eux; \
+    export \
 		CFLAGS="$PHP_CFLAGS" \
 		CPPFLAGS="$PHP_CPPFLAGS" \
 		LDFLAGS="$PHP_LDFLAGS" \
     ; \
+    PHP_VERSION_ID="$(php -r 'echo PHP_VERSION_ID;')"; \
+    PHP_ZTS="$(php -r 'echo PHP_ZTS;')"; \
 \
 # Install PHP extensions built into the official image \
     docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype --with-avif; \
@@ -131,8 +138,10 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN set -eux; \
     pie install --skip-enable-extension php-memcached/php-memcached --enable-memcached-json --enable-memcached-igbinary --enable-memcached-msgpack  && \
     pie install --skip-enable-extension phpredis/phpredis --enable-redis-igbinary --enable-redis-msgpack  && \
     pie install --skip-enable-extension supermetrics/jsonpath && \
-    pie install --skip-enable-extension swoole/swoole$( [ "$PHP_VERSION_ID" -ge 80500 ] && echo :dev-master ) && \
-    pie install --skip-enable-extension xdebug/xdebug && \
+    pie install --skip-enable-extension swoole/swoole && \
+    pie install --skip-enable-extension xdebug/xdebug
+
+RUN PHP_ZTS="$(php -r 'echo PHP_ZTS;')"; \
     docker-php-ext-enable  \
       amqp \
       apcu \
