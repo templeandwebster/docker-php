@@ -46,31 +46,25 @@ jobs:
           fi
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/cache/php
           tags: |
             type=raw,value=${{ steps.compute_variants.outputs.variant }},prefix=${{ inputs.version }}-,suffix=-prebuild
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
       - name: Login to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Compute scope hash for this combo
-        id: compute_hash
-        run: |
-          # This step only echoes the expression into an output, evaluated by Actions
-          # Use the same hashFiles() pattern you used in your build step.
-          echo "scope_hash=${{ hashFiles('builder/**/Dockerfile*') }}" >> $GITHUB_OUTPUT
       - name: Build PHP ${{ inputs.version }} ${{ steps.compute_variants.outputs.variant }} (prebuild)
         id: build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: builder/${{ inputs.os }}/Dockerfile-build
@@ -87,8 +81,8 @@ jobs:
           provenance: mode=max
           sbom: true
           push: true
-          cache-from: ${{ github.run_attempt == 1 && format('type=registry,ref=ghcr.io/{0}/cache/php:{1}-{2}-{3}', github.repository_owner, inputs.version, steps.compute_variants.outputs.variant, steps.compute_hash.outputs.scope_hash) || '' }}
-          cache-to: type=registry,mode=max,ref=${{ format('ghcr.io/{0}/cache/php:{1}-{2}-{3}', github.repository_owner, inputs.version, steps.compute_variants.outputs.variant, steps.compute_hash.outputs.scope_hash) }}
+          cache-from: ${{ github.run_attempt == 1 && format('type=registry,ref=ghcr.io/{0}/cache/php:{1}-{2}', github.repository_owner, inputs.version, steps.compute_variants.outputs.variant) || '' }}
+          cache-to: type=registry,mode=max,ref=${{ format('ghcr.io/{0}/cache/php:{1}-{2}', github.repository_owner, inputs.version, steps.compute_variants.outputs.variant) }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
