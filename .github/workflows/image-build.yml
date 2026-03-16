@@ -93,7 +93,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: builder/${{ inputs.os }}/Dockerfile-image
+          file: builder/${{ inputs.os }}/Dockerfile
           build-args: |
             PHP_VERSION=${{ inputs.version }}
             PHP_VARIANT=${{ inputs.variant }}
@@ -111,7 +111,5 @@ jobs:
           # Push only when running on main or master branch (for push, workflow_dispatch, or workflow_call events)
           push: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
-          cache-from: ${{ github.run_attempt == 1 && format('type=gha,scope={0}-{1}', inputs.version, inputs.os) || '' }}
-          cache-to: type=gha,mode=max,scope=${{ format('{0}-{1}', inputs.version, inputs.os) }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
