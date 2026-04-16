@@ -9,7 +9,7 @@ on:
   push:
     branches: [ master ]
   schedule:
-    - cron: '0 0 1,16 * *'
+    - cron: '0 0 */4 * *'
   workflow_dispatch:
     inputs:
       base_image_registry:
@@ -37,6 +37,9 @@ permissions:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  cleanup-cache:
+    uses: ./.github/workflows/github-cache-cleanup.yml
+    secrets: inherit
   base-images:
     strategy:
       max-parallel: 10
@@ -45,8 +48,8 @@ jobs:
           - '8.1.34'
           - '8.2.30'
           - '8.3.30'
-          - '8.4.19'
-          - '8.5.4'
+          - '8.4.20'
+          - '8.5.5'
         os:
           - alpine
           - debian
@@ -61,10 +64,10 @@ jobs:
       os: ${{ matrix.os }}
       base_image_registry: ${{ github.event.inputs.base_image_registry || 'docker.io' }}
   build-images:
-    needs: base-images
+    needs: [cleanup-cache, base-images]
     if: needs.base-images.result == 'success'
     strategy:
-      max-parallel: 10
+      max-parallel: 4
       matrix:
         os:
           - alpine
@@ -78,8 +81,8 @@ jobs:
           - '8.1.34'
           - '8.2.30'
           - '8.3.30'
-          - '8.4.19'
-          - '8.5.4'
+          - '8.4.20'
+          - '8.5.5'
         exclude:
           - variant: apache
             os: alpine
@@ -89,13 +92,8 @@ jobs:
       version: ${{ matrix.version }}
       os: ${{ matrix.os }}
       variant: ${{ matrix.variant }}
-      latest: '8.5.4'
+      latest: '8.5.5'
       base_image_registry: ${{ github.event.inputs.base_image_registry || 'docker.io' }}
-  cleanup-cache:
-    needs: build-images
-    if: github.event_name == 'pull_request' && needs.build-images.result == 'success'
-    uses: ./.github/workflows/github-cache-cleanup.yml
-    secrets: inherit
   build-complete:
     needs: [base-images, build-images, cleanup-cache]
     if: always()
