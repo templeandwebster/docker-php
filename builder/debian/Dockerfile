@@ -36,6 +36,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         locales \
         netcat-traditional \
         wget \
+        zip \
+        unzip \
 # PHP extension dependencies \
         `apt-cache pkgnames libavif | sort -V | head -1` \
         `apt-cache pkgnames libc-ares | sort -V | head -1` \
