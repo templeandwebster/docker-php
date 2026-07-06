@@ -26,8 +26,6 @@ RUN --mount=type=cache,target=/var/cache/apk,sharing=locked \
         gettext \
         netcat-openbsd \
         wget \
-        zip \
-        unzip \
 # Add SSL support \
         ca-certificates \
         gnupg \

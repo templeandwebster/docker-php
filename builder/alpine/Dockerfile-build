@@ -72,7 +72,8 @@ RUN --mount=type=cache,target=/tmp/pear,sharing=locked \
         pdo_mysql \
         pdo_sqlite \
         sockets \
-        xsl; \
+        xsl \
+        zip; \
     \
 # Install PHP extensions from source using PECL \
     pecl install --onlyreqdeps --nobuild igbinary; \
@@ -122,7 +123,6 @@ RUN --mount=type=cache,target=/tmp/pear,sharing=locked \
     if [ "$PHP_ZTS" -eq 1 ]; then pie install --skip-enable-extension pecl/parallel; fi && \
     pie install --skip-enable-extension pecl/pcov  && \
     pie install --skip-enable-extension pecl/timezonedb  && \
-    pie install --skip-enable-extension pecl/zip  && \
     pie install --skip-enable-extension php-memcached/php-memcached --enable-memcached-json --enable-memcached-igbinary --enable-memcached-msgpack  && \
     pie install --skip-enable-extension phpredis/phpredis --enable-redis-igbinary --enable-redis-msgpack  && \
     pie install --skip-enable-extension supermetrics/jsonpath && \
@@ -145,8 +145,7 @@ RUN PHP_ZTS="$(php -r 'echo PHP_ZTS;')"; \
       redis \
       swoole \
       timezonedb \
-      xdebug \
-      zip || { echo "Could not enable some extensions"; exit 1; }; \
+      xdebug || { echo "Could not enable some extensions"; exit 1; }; \
     \
 # check all installed extensions \
     pie show --all;
