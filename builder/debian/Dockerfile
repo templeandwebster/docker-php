@@ -72,29 +72,34 @@ RUN set -eux \
     ; sed -i "s|^\(;\)*realpath_cache_size\s*=\s*\(.*\)|realpath_cache_size=\2|g" $PHP_INI_DIR/php.ini \
     ; sed -i "s|^\(;\)*realpath_cache_ttl\s*=\s*\(.*\)|realpath_cache_ttl=\2|g" $PHP_INI_DIR/php.ini
 
-RUN docker-php-ext-enable  \
-    apcu \
-    amqp \
-    ast \
-    bcmath \
-    dba \
-    ev \
-    imagick \
-    intl \
-    mcrypt \
-    memcached \
-    mongodb \
-    pcntl \
-    pcov \
-    pdo \
-    pdo_sqlsrv \
-    redis \
-    sqlsrv \
-    xdebug \
-    xhprof \
-    xsl \
-    zip \
-    ;
+RUN set -eux; \
+    PHP_VERSION_ID="$(php -r 'echo PHP_VERSION_ID;')"; \
+    PHP_ZTS="$(php -r 'echo PHP_ZTS;')"; \
+    docker-php-ext-enable  \
+      amqp \
+      apcu \
+      ast \
+      bcmath \
+      dba \
+      ev \
+      imagick \
+      intl \
+      jsonpath \
+      mcrypt \
+      memcached \
+      mongodb \
+      $( [ "$PHP_ZTS" = 1 ] && echo parallel ) \
+      pcntl \
+      pcov \
+      pdo_sqlsrv \
+      redis \
+      sqlsrv \
+      swoole \
+      timezonedb \
+      xdebug \
+      $( [ "$PHP_VERSION_ID" -lt 80500 ] && echo xhprof ) \
+      xsl \
+      zip || { echo "Could not enable some extensions"; exit 1; };
 
 WORKDIR /var/www/html
 
